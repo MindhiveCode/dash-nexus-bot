@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97b53c42-2299-4644-8bd1-a8c9468291c3" name="Default" comment="Small improvement for handling dev/production.">
-      <change afterPath="$PROJECT_DIR$/lib/cycle_checker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discord/discord_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/discord/discord_bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/diff_checker.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/diff_checker.py" afterDir="false" />
-    </list>
+    <list default="true" id="97b53c42-2299-4644-8bd1-a8c9468291c3" name="Default" comment="Small improvement for handling dev/production." />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,8 +26,8 @@
       <file leaf-file-name="discord_bot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/discord/discord_bot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="71" column="52" lean-forward="true" selection-start-line="71" selection-start-column="52" selection-end-line="71" selection-end-column="52" />
+            <state relative-caret-position="365">
+              <caret line="72" column="58" selection-start-line="72" selection-start-column="58" selection-end-line="72" selection-end-column="58" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -436,8 +431,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/discord/discord_bot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="71" column="52" lean-forward="true" selection-start-line="71" selection-start-column="52" selection-end-line="71" selection-end-column="52" />
+        <state relative-caret-position="365">
+          <caret line="72" column="58" selection-start-line="72" selection-start-column="58" selection-end-line="72" selection-end-column="58" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>

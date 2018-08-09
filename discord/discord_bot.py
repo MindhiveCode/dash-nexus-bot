@@ -28,7 +28,7 @@ async def on_message(message):
         return
 
     reply = str()
-    if message.content.upper().startswith('!GovHelp'):
+    if message.content.upper().startswith('!GOVHELP'):
         for command in commands_list:
             reply += (command + "\n")
 
