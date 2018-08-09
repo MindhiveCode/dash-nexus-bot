@@ -14,7 +14,8 @@ DC_API_URL = os.environ.get('DC_API_URL')
 
 
 def get_new():
-    response = requests.get(DC_API_URL)
+    budget_url = DC_API_URL + '/budget'
+    response = requests.get(budget_url)
 
     if response.status_code == 200:
         budget_dict = response.json()
