@@ -89,7 +89,7 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    await client.change_presence(game=Game(name="Governance", type=1))
+    await client.change_presence(game=Game(name="!GovHelp to list commands", type=1))
     print("Logged in as " + client.user.name)
 
 
