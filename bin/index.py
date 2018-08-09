@@ -27,7 +27,7 @@ def handle_concept():
     return "OK"
 
 
-@app.route('/', methods=['POST'])
+@app.route('/test', methods=['POST'])
 def handle_concept():
     data = json.loads(request.data)
 
