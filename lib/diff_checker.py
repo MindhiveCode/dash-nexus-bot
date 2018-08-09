@@ -83,10 +83,10 @@ def upload_new(budget_data):
                 return False
 
     else:
-        with open("tmp/latest.json", 'w') as json_dumper:
+        with open("/tmp/latest.json", 'w') as json_dumper:
             json.dump(budget_data, json_dumper)
 
-        with open("tmp/latest.json", 'rb') as to_upload:
+        with open("/tmp/latest.json", 'rb') as to_upload:
             try:
                 conn.upload('latest.json', f, bucket=bucket)
                 return True
