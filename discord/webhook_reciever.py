@@ -23,11 +23,13 @@ if __name__ == '__main__':
 
     if os.environ.get('ENVIRONMENT') == 'PRODUCTION':
         print("Running in PRODUCTION environment")
+        app.run(host='0.0.0.0', port=port_config, debug=False)
+
     else:
         print("Running in DEVELOPMENT environment")
 
-    if os.name == 'nt':
-        app.run(host='127.0.0.1', port=port_config, debug=True)
-    else:
-        app.run(host='0.0.0.0', port=port_config, debug=False)
+        if os.name == 'nt':
+            app.run(host='127.0.0.1', port=port_config, debug=True)
+        else:
+            app.run(host='0.0.0.0', port=port_config, debug=True)
 
