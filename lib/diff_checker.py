@@ -4,15 +4,12 @@ import tinys3
 import boto
 from boto.s3.key import Key
 import os
-import pdb
 
 # bucket = 'dash-nexus-bot'
 bucket = 'nexus-test-bucket-hodges'
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-# AWS_ACCESS_KEY_ID = "AKIAIRJCC6I7KVKA7QWA"
 AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
-# AWS_SECRET_KEY = "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"
 
 DC_API_URL = os.environ.get('DC_API_URL')
 
@@ -88,7 +85,7 @@ def upload_new(budget_data):
 
         with open("/tmp/latest.json", 'rb') as to_upload:
             try:
-                conn.upload('latest.json', f, bucket=bucket)
+                conn.upload('latest.json', to_upload, bucket=bucket)
                 return True
             except Exception as e:
                 print("Failure: {}".format(e))
