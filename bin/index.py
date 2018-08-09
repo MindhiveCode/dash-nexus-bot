@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 @app.route('/new_proposal', methods=['POST'])
-def foo():
+def handle_proposals():
     data = json.loads(request.data)
 
     print(data)
@@ -27,8 +27,8 @@ def handle_concept():
     return "OK"
 
 
-@app.route('/test', methods=['POST'])
-def handle_concept():
+@app.route('/', methods=['POST'])
+def handle_index():
     data = json.loads(request.data)
 
     print(data)
