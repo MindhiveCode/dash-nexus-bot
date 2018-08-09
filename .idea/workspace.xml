@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97b53c42-2299-4644-8bd1-a8c9468291c3" name="Default" comment="Small improvement for handling dev/production.">
-      <change afterPath="$PROJECT_DIR$/bin/index.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/discord/webhook_reciever.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/webhook_reciever.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/webhook_reciever.py" afterDir="false" />
-    </list>
+    <list default="true" id="97b53c42-2299-4644-8bd1-a8c9468291c3" name="Default" comment="Small improvement for handling dev/production." />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +20,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/index.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
@@ -37,11 +32,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="api_methods.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/api_methods.py">
+      <file leaf-file-name="diff_checker.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lib/diff_checker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="14" lean-forward="true" selection-start-line="12" selection-start-column="14" selection-end-line="12" selection-end-column="14" />
+            <state relative-caret-position="311">
+              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -233,13 +231,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lib/s3_abstraction_layer.py</url>
-          <line>28</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="3" />
     </breakpoint-manager>
   </component>
@@ -272,13 +263,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/api_methods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="14" lean-forward="true" selection-start-line="12" selection-start-column="14" selection-end-line="12" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/webhook_reciever.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -295,6 +279,16 @@
           <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/diff_checker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -27,6 +27,16 @@ def handle_concept():
     return "OK"
 
 
+@app.route('/', methods=['POST'])
+def handle_concept():
+    data = json.loads(request.data)
+
+    print(data)
+    pprint(data)
+
+    return "OK"
+
+
 if __name__ == '__main__':
     port_config = int(os.getenv('PORT', 5000))
     print("Starting up server.")

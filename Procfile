@@ -1,1 +1,1 @@
-web: python discord/webhook_reciever.py
+web: python bin/index.py
