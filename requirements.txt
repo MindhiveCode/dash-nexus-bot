@@ -2,3 +2,5 @@ requests
 flask
 tinys3
 boto
+discord
+aiohttp
