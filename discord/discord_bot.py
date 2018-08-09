@@ -20,10 +20,10 @@ commands_list = [
 ]
 
 
-@client.command(name='Proposals',
+@client.command(name='!Proposals',
                 description="Returns a list of currently passing proposals",
                 brief="List proposals",
-                aliases=['props', 'proposals', 'list'],
+                aliases=['!props', '!proposals', '!list'],
                 pass_context=True)
 async def list_props(context):
     print("Attempting to list proposals")
@@ -36,6 +36,10 @@ async def list_props(context):
             props_list.append(str(prop['title'] + prop['dw_url'] + "\n"))
 
     await client.say(str(props_list) + "\n" + context.message.author.mention)
+
+
+# For sending to the #proposals channel
+# await client.send_message(client.get_channel('370342005785755650'), (str(props_list) + "\n" + context.message.author.mention))
 
 
 @client.event
@@ -55,7 +59,7 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    await client.change_presence(game=Game(name="Watching Dash Governance"))
+    await client.change_presence(game=Game(name="Governance"))
     print("Logged in as " + client.user.name)
 
 
