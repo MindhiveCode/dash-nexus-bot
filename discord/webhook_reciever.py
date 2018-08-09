@@ -7,7 +7,7 @@ from pprint import pprint
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/dc_webhook', methods=['POST'])
 def foo():
     data = json.loads(request.data)
 
