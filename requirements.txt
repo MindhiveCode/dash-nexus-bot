@@ -1,3 +1,4 @@
 requests
 flask
-boto3
+tinys3
+boto
