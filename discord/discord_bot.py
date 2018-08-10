@@ -3,8 +3,8 @@ from discord.ext.commands import Bot
 import os
 import datetime
 
-from lib.diff_checker import get_new
-# from lib.cycle_checker import get_cycle_info
+from lib.diff_checker import get_new, props_sorted
+from lib.cycle_checker import get_cycle_info
 
 BOT_PREFIX = ("?", "!")
 BOT_TOKEN = os.environ.get("DISCORD_TOKEN")
@@ -15,10 +15,13 @@ commands_list = [
     "!GovHelp",
     "!Proposals",
     "!Cycle"
+    "!Countdown"
 ]
 
 # For sending to the #proposals channel
-# await client.send_message(client.get_channel('370342005785755650'), (str(props_list) + "\n" + context.message.author.mention))
+
+# await client.send_message(client.get_channel('370342005785755650'),
+# (str(props_list) + "\n" + context.message.author.mention))
 
 
 @client.event
@@ -27,6 +30,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    # Help information
     reply = str()
     if message.content.upper().startswith('!GOVHELP'):
         for command in commands_list:
@@ -36,6 +40,7 @@ async def on_message(message):
 
         await client.send_message(message.channel, msg)
 
+    # Cycle information
     if message.content.upper().startswith('!CYCLE'):
         cycle_info = get_new()['budget']
 
@@ -62,23 +67,29 @@ async def on_message(message):
                                                     str(fancy_message) + "\n" + "@{}".format(message.author)))
         """
 
+    # Proposals
     if message.content.upper().startswith('!PROPOSALS'):
-        proposals = get_new()['proposals']
+        proposals = props_sorted()
+        print(proposals)
+        mn_count = get_cycle_info()['general']['consensus_masternodes']
 
         props_list = []
 
         for prop in proposals:
             if prop['will_be_funded'] is True:
                 abs_votes = prop['yes'] - prop['no']
-                props_list.append((prop['title'], prop['dw_url'], abs_votes))
+                percentage = round(((abs_votes/mn_count) * 100), 2)
+                props_list.append((prop['title'], prop['dw_url'], abs_votes, percentage))
 
         fancy_message = str()
 
         for prop in props_list:
-            fancy_message += "{} - Absolute Votes: **{}**".format(prop[0], prop[2])
+            fancy_message += "**Title:** {}".format(prop[0])
             fancy_message += '\n'
-            fancy_message += "Link: <{}>".format(prop[1])
-            fancy_message += '\n'
+            fancy_message += "**Absolute Votes:** {} -> _{}%_".format(prop[2], prop[3])
+            fancy_message += "\n"
+            fancy_message += "**Link:** <{}>".format(prop[1])
+            fancy_message += '\n \n'
 
         await client.send_message(message.channel, ("**Proposals that will be funded:** \n \n" +
                                                     str(fancy_message) + "\n"))

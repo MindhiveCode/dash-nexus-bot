@@ -3,6 +3,7 @@ import json
 import tinys3
 import boto
 import os
+import pandas as pd
 
 # bucket = 'dash-nexus-bot'
 bucket = 'nexus-test-bucket-hodges'
@@ -23,6 +24,21 @@ def get_new():
         return {}
 
     return budget_dict
+
+
+def props_sorted():
+    data = get_new()['proposals']
+
+    for prop in data:
+        abs_votes = prop['yes'] - prop['no']
+        prop.update({"abs_votes": abs_votes})
+
+    df = pd.DataFrame.from_dict(data)
+    df.sort_values(by=['abs_votes'], inplace=True, ascending=False)
+
+    sorted_data = df.to_dict(orient='records')
+
+    return sorted_data
 
 
 def get_old():
@@ -134,4 +150,6 @@ def check_for_new():
 
 
 if __name__ == "__main__":
-    check_for_new()
+    # check_for_new()
+
+    props_sorted()

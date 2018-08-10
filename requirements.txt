@@ -4,3 +4,4 @@ tinys3
 boto
 discord
 aiohttp
+pandas
