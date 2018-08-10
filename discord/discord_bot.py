@@ -15,7 +15,6 @@ commands_list = [
     "!GovHelp",
     "!Proposals",
     "!Cycle",
-    "!Countdown"
 ]
 
 # For sending to the #proposals channel
@@ -71,18 +70,27 @@ async def on_message(message):
         projection = round(projection, 2)
         fancy_message = str()
 
-        fancy_message += "**Remaining Funds Available:** {}/{}".format(avail, total)
+        fancy_message += "**Remaining Funds Available:**  {}/{}".format(avail, total)
         fancy_message += "\n"
-        fancy_message += "**Remaining After Likely Allocation (Absolute Votes > 250):** {}/{}".format(round((total-projection), 2), total)
+        fancy_message += "**Remaining After Likely Allocation (Absolute Votes > 250):**  {}/{}".format(round((total-projection), 2), total)
         fancy_message += "\n"
-        fancy_message += "**Voting Closes:** {:%B %d, %Y @ %H:%M:%S} UTC".format(voting_close)
+        fancy_message += "**Voting Deadline (Estimated):**  {:%B %d, %Y @ %H:%M:%S} UTC".format(voting_close)
         fancy_message += "\n"
-        fancy_message += "**Proposal Payments:** {:%B %d, %Y @ %H:%M:%S} UTC".format(payment_date)
+        fancy_message += "**Payout Date (Estimated):**  {:%B %d, %Y @ %H:%M:%S} UTC".format(payment_date)
+        fancy_message += "\n \n"
+        fancy_message += "_Times are all projected based on average block times._"
 
-        await client.send_message(message.channel, "Check your DM's for a reply.")
-        await client.send_message(message.author, ("**Current Cycle Information:** \n \n" +
-                                                    str(fancy_message) + "\n"))
+        if str(message.channel.type) == "private":
+            pass
+        else:
+            await client.send_message(message.channel, "Check your DM's for a reply.")
 
+        try:
+            await client.send_message(message.author, ("**Current Cycle Information:** \n \n" +
+                                                       str(fancy_message) + "\n"))
+        except Exception as e:
+            print(e)
+            await client.send_message(message.author, "Failed to send message. We are investigating.")
 
         """
         await client.send_message(message.channel, ("**Current Cycle Information:** \n \n" +
@@ -92,7 +100,7 @@ async def on_message(message):
     # Proposals
     if message.content.upper().startswith('!PROPOSALS'):
         proposals = props_sorted()
-        print(proposals)
+        # print(proposals)
         mn_count = get_cycle_info()['general']['consensus_masternodes']
 
         props_list = []
@@ -101,25 +109,51 @@ async def on_message(message):
             if prop['will_be_funded'] is True:
                 abs_votes = prop['yes'] - prop['no']
                 percentage = round(((abs_votes/mn_count) * 100), 2)
+
+                # Shorten titles
+                # prop.update({"title": (prop['title'][:60] + "...")})
+
+                # Add to list
                 props_list.append((prop['title'], prop['dw_url'], abs_votes, percentage))
 
         fancy_message = str()
+        fancy_message_2 = str()
 
         for prop in props_list:
-            fancy_message += "**Title:** {}".format(prop[0])
-            fancy_message += '\n'
-            fancy_message += "**Absolute Votes:** {} -> _{}%_".format(prop[2], prop[3])
-            fancy_message += "\n"
-            fancy_message += "**Link:** <{}>".format(prop[1])
-            fancy_message += '\n \n'
+            if len(fancy_message) < 1750:
+                fancy_message += "**Title:** {}".format(prop[0])
+                fancy_message += '\n'
+                fancy_message += "**Absolute Votes:** {} -> _{}%_".format(prop[2], prop[3])
+                fancy_message += "\n"
+                fancy_message += "**Link:** <{}>".format(prop[1])
+                fancy_message += '\n \n'
 
-        await client.send_message(message.channel, "Check your DM's for a reply.")
-        await client.send_message(message.author, ("**Proposals that will be funded:** \n \n" +
-                                                    str(fancy_message) + "\n"))
+            else:
+                fancy_message_2 += "**Title:** {}".format(prop[0])
+                fancy_message_2 += '\n'
+                fancy_message_2 += "**Absolute Votes:** {} -> _{}%_".format(prop[2], prop[3])
+                fancy_message_2 += "\n"
+                fancy_message_2 += "**Link:** <{}>".format(prop[1])
+                fancy_message_2 += '\n \n'
+
+        if str(message.channel.type) == "private":
+            pass
+        else:
+            await client.send_message(message.channel, "Check your DM's for a reply.")
+
+        try:
+            await client.send_message(message.author, ("**Proposals that will be funded:** \n \n" + fancy_message + "\n"))
+            if len(fancy_message_2) > 1:
+                await client.send_message(message.author, ('**Proposals that will be funded (continued):** \n \n' + fancy_message_2 + "\n"))
+        except Exception as e:
+            print(e)
+            await client.send_message(message.author, "Failed to send message. We are investigating.")
+
         """
         await client.send_message(message.channel, ("**Proposals that will be funded:** \n \n" +
                                                     str(fancy_message) + "\n" + "@{}".format(message.author)))
         """
+
 
 @client.event
 async def on_ready():
