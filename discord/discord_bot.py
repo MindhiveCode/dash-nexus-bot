@@ -35,7 +35,7 @@ async def on_message(message):
         for command in commands_list:
             reply += (command + "\n")
 
-        msg = "**Commands:** \n{}".format(reply).format(message)
+        msg = "{} **Commands:** \n{}".format(message.author.mention, reply).format(message)
 
         await client.send_message(message.channel, msg)
 
@@ -83,7 +83,7 @@ async def on_message(message):
         if str(message.channel.type) == "private":
             pass
         else:
-            await client.send_message(message.channel, "Check your DM's for a reply.")
+            await client.send_message(message.channel, "{} Check your DM's for a reply.".format(message.author.mention))
 
         try:
             await client.send_message(message.author, ("**Current Cycle Information:** \n \n" +
