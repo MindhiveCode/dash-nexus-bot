@@ -38,7 +38,7 @@ async def on_message(message):
 
         msg = "**Commands:** \n{}".format(reply).format(message)
 
-        await client.send_message(message.author, msg)
+        await client.send_message(message.channel, msg)
 
     # Cycle information
     if message.content.upper().startswith('!CYCLE'):
@@ -68,6 +68,7 @@ async def on_message(message):
             else:
                 continue
 
+        projection = round(projection, 2)
         fancy_message = str()
 
         fancy_message += "**Remaining Funds Available:** {}/{}".format(avail, total)
