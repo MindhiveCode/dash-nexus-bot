@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="97b53c42-2299-4644-8bd1-a8c9468291c3" name="Default" comment="Small improvement for handling dev/production.">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/diff_checker.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/diff_checker.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,8 +17,8 @@
       <file leaf-file-name="index.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/index.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
+            <state relative-caret-position="255">
+              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -41,8 +42,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="170">
-                <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+              <first_editor relative-caret-position="850">
+                <caret line="50" column="3" lean-forward="true" selection-start-line="50" selection-start-column="3" selection-end-line="50" selection-end-column="3" />
               </first_editor>
               <second_editor />
             </state>
@@ -61,8 +62,8 @@
       <file leaf-file-name="diff_checker.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/diff_checker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1015">
-              <caret line="106" column="21" selection-start-line="106" selection-start-column="16" selection-end-line="106" selection-end-column="21" />
+            <state relative-caret-position="119">
+              <caret line="7" column="27" lean-forward="true" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
                 <element signature="e#524#974#0" />
@@ -78,8 +79,8 @@
       <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+            <state>
+              <caret selection-end-line="6" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -136,8 +137,8 @@
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/lib/cycle_checker.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/lib/diff_checker.py" />
         <option value="$PROJECT_DIR$/discord/discord_bot.py" />
+        <option value="$PROJECT_DIR$/lib/diff_checker.py" />
         <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
@@ -166,11 +167,6 @@
               <item name="NexusBot" type="b2602c69:ProjectViewProjectNode" />
               <item name="NexusBot" type="462c0819:PsiDirectoryNode" />
               <item name="bin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="NexusBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NexusBot" type="462c0819:PsiDirectoryNode" />
-              <item name="discord" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="NexusBot" type="b2602c69:ProjectViewProjectNode" />
@@ -237,6 +233,7 @@
         <env name="DC_API_URL" value="https://api-proxy.dashnexus.org" />
         <env name="AWS_SECRET_KEY" value="1cEa6FbCnQ+OtrD8G980mW2EaswNVNjN7g8sFX1Q" />
         <env name="AWS_ACCESS_KEY_ID" value="AKIAIUB5RJ72GXUZRRJQ" />
+        <env name="S3_BUCKET" value="nexus-test-bucket-hodges" />
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/lib" />
@@ -330,7 +327,7 @@
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.06840714" />
       <window_info anchor="bottom" id="TODO" order="9" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" />
-      <window_info anchor="right" id="Run" order="3" visible="true" weight="0.42729676" />
+      <window_info anchor="right" id="Run" order="3" visible="true" weight="0.29411766" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.32950193" />
       <window_info anchor="bottom" id="Python Console" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -414,13 +411,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/latest.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="48">
@@ -432,38 +422,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1382">
           <caret line="356" selection-start-line="356" selection-end-line="356" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/cycle_checker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="15" lean-forward="true" selection-start-column="15" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/diff_checker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1015">
-          <caret line="106" column="21" selection-start-line="106" selection-start-column="16" selection-end-line="106" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-            <element signature="e#524#974#0" />
-            <element signature="e#998#1318#0" />
-            <element signature="e#1341#1399#0" />
-            <element signature="e#1437#1593#0" />
-            <element signature="e#2599#3438#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/index.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -491,11 +449,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/cycle_checker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="15" lean-forward="true" selection-start-column="15" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="6" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/diff_checker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="27" lean-forward="true" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#524#974#0" />
+            <element signature="e#998#1318#0" />
+            <element signature="e#1341#1399#0" />
+            <element signature="e#1437#1593#0" />
+            <element signature="e#2599#3438#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/index.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="170">
-            <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <first_editor relative-caret-position="850">
+            <caret line="50" column="3" lean-forward="true" selection-start-line="50" selection-start-column="3" selection-end-line="50" selection-end-column="3" />
           </first_editor>
           <second_editor />
         </state>

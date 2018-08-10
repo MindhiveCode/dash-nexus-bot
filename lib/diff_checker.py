@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 # bucket = 'dash-nexus-bot'
-bucket = 'nexus-test-bucket-hodges'
+bucket = os.environ.get("S3_BUCKET")
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
