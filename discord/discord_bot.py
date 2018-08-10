@@ -136,10 +136,12 @@ async def on_message(message):
                 fancy_message_2 += "**Link:** <{}>".format(prop[1])
                 fancy_message_2 += '\n \n'
 
+        print(message.author.mention)
+
         if str(message.channel.type) == "private":
             pass
         else:
-            await client.send_message(message.channel, "Check your DM's for a reply.")
+            await client.send_message(message.channel, "{} Check your DM's for a reply.".format(message.author.mention))
 
         try:
             await client.send_message(message.author, ("**Proposals that will be funded:** \n \n" + fancy_message + "\n"))
