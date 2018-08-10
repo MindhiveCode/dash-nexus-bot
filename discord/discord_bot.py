@@ -14,7 +14,7 @@ client = Bot(command_prefix=BOT_PREFIX)
 commands_list = [
     "!GovHelp",
     "!Proposals",
-    "!Cycle"
+    "!Cycle",
     "!Countdown"
 ]
 
