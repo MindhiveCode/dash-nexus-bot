@@ -38,27 +38,48 @@ async def on_message(message):
 
         msg = "**Commands:** \n{}".format(reply).format(message)
 
-        await client.send_message(message.channel, msg)
+        await client.send_message(message.author, msg)
 
     # Cycle information
     if message.content.upper().startswith('!CYCLE'):
-        cycle_info = get_new()['budget']
+        dc_data = get_new()
+        cycle_info = dc_data['budget']
+        proposal_info = dc_data['proposals']
 
         # print(cycle_info)
 
+        # Calculations
         available_funds = float(cycle_info['total_amount']) - cycle_info['alloted_amount']
         payment_date = datetime.datetime.strptime(cycle_info['payment_date'], "%Y-%m-%d %H:%M:%S")
         voting_close = payment_date - datetime.timedelta(days=3.0245)
 
+        avail = round(available_funds, 2)
+        projection = 0
+        total = round(float(cycle_info['total_amount']), 2)
+
+        for prop in proposal_info:
+            abs_votes = prop['yes'] - prop['no']
+            prop.update({"abs_votes": abs_votes})
+
+        for prop in proposal_info:
+            if prop['abs_votes'] > 250:
+                prop.update({"will_be_funded": True})
+                projection += prop['monthly_amount']
+            else:
+                continue
+
         fancy_message = str()
 
-        fancy_message += "**Voting Freeze:** {:%B, %d, %Y @ %H:%M:%S} UTC".format(voting_close)
+        fancy_message += "**Remaining Funds Available:** {}/{}".format(avail, total)
         fancy_message += "\n"
-        fancy_message += "**Proposal Payments:** {:%B, %d, %Y @ %H:%M:%S} UTC".format(payment_date)
+        fancy_message += "**Remaining After Likely Allocation (Absolute Votes > 250):** {}/{}".format(projection, total)
         fancy_message += "\n"
-        fancy_message += "**Remaining Funds Available:** {}/{}".format(round(available_funds, 2), round(float(cycle_info['total_amount']), 2))
+        fancy_message += "**Voting Closes:** {:%B %d, %Y @ %H:%M:%S} UTC".format(voting_close)
+        fancy_message += "\n"
+        fancy_message += "**Proposal Payments:** {:%B %d, %Y @ %H:%M:%S} UTC".format(payment_date)
 
-        await client.send_message(message.channel, ("**Current Cycle Information:** \n \n" +
+
+        await client.send_message(message.author, ("**Current Cycle Information:** \n \n" +
                                                     str(fancy_message) + "\n"))
 
 
@@ -91,7 +112,7 @@ async def on_message(message):
             fancy_message += "**Link:** <{}>".format(prop[1])
             fancy_message += '\n \n'
 
-        await client.send_message(message.channel, ("**Proposals that will be funded:** \n \n" +
+        await client.send_message(message.author, ("**Proposals that will be funded:** \n \n" +
                                                     str(fancy_message) + "\n"))
         """
         await client.send_message(message.channel, ("**Proposals that will be funded:** \n \n" +

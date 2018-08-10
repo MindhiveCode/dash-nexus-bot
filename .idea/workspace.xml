@@ -28,8 +28,8 @@
       <file leaf-file-name="discord_bot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/discord/discord_bot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+            <state relative-caret-position="433">
+              <caret line="66" column="34" lean-forward="true" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="34" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -110,6 +110,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>lib</find>
+      <find>abs_</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -328,7 +329,7 @@
       <window_info anchor="bottom" id="Python Console" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="3" />
-      <window_info anchor="bottom" id="Debug" order="6" visible="true" weight="0.39974457" />
+      <window_info anchor="bottom" id="Debug" order="6" weight="0.39974457" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="5" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -358,7 +359,19 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="10" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/discord/discord_bot.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/discord/discord_bot.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="12" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -464,8 +477,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/discord/discord_bot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        <state relative-caret-position="433">
+          <caret line="66" column="34" lean-forward="true" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="34" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
