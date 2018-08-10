@@ -78,7 +78,7 @@ async def on_message(message):
         fancy_message += "\n"
         fancy_message += "**Proposal Payments:** {:%B %d, %Y @ %H:%M:%S} UTC".format(payment_date)
 
-
+        await client.send_message(message.channel, "Check your DM's for a reply.")
         await client.send_message(message.author, ("**Current Cycle Information:** \n \n" +
                                                     str(fancy_message) + "\n"))
 
@@ -112,6 +112,7 @@ async def on_message(message):
             fancy_message += "**Link:** <{}>".format(prop[1])
             fancy_message += '\n \n'
 
+        await client.send_message(message.channel, "Check your DM's for a reply.")
         await client.send_message(message.author, ("**Proposals that will be funded:** \n \n" +
                                                     str(fancy_message) + "\n"))
         """
