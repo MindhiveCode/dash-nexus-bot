@@ -73,7 +73,7 @@ async def on_message(message):
 
         fancy_message += "**Remaining Funds Available:** {}/{}".format(avail, total)
         fancy_message += "\n"
-        fancy_message += "**Remaining After Likely Allocation (Absolute Votes > 250):** {}/{}".format(total-projection, total)
+        fancy_message += "**Remaining After Likely Allocation (Absolute Votes > 250):** {}/{}".format(round((total-projection), 2), total)
         fancy_message += "\n"
         fancy_message += "**Voting Closes:** {:%B %d, %Y @ %H:%M:%S} UTC".format(voting_close)
         fancy_message += "\n"
