@@ -52,11 +52,11 @@ async def on_message(message):
 
         fancy_message = str()
 
-        fancy_message += "Voting Freeze: **{:%B, %d, %Y @ %H:%M:%S} UTC**".format(voting_close)
+        fancy_message += "**Voting Freeze:** {:%B, %d, %Y @ %H:%M:%S} UTC".format(voting_close)
         fancy_message += "\n"
-        fancy_message += "Proposal Payments: **{:%B, %d, %Y @ %H:%M:%S} UTC**".format(payment_date)
+        fancy_message += "**Proposal Payments:** {:%B, %d, %Y @ %H:%M:%S} UTC".format(payment_date)
         fancy_message += "\n"
-        fancy_message += "Remaining Funds Available: **{}/{}**".format(round(available_funds, 2), round(float(cycle_info['total_amount']), 2))
+        fancy_message += "**Remaining Funds Available:** {}/{}".format(round(available_funds, 2), round(float(cycle_info['total_amount']), 2))
 
         await client.send_message(message.channel, ("**Current Cycle Information:** \n \n" +
                                                     str(fancy_message) + "\n"))
