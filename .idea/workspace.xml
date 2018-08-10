@@ -28,8 +28,8 @@
       <file leaf-file-name="discord_bot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/discord/discord_bot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="66" column="34" lean-forward="true" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="34" />
+            <state relative-caret-position="736">
+              <caret line="74" column="118" selection-start-line="74" selection-start-column="118" selection-end-line="74" selection-end-column="118" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -165,11 +165,6 @@
               <item name="NexusBot" type="b2602c69:ProjectViewProjectNode" />
               <item name="NexusBot" type="462c0819:PsiDirectoryNode" />
               <item name="discord" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="NexusBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NexusBot" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -321,10 +316,10 @@
     <frame x="-7" y="-7" width="3086" height="1702" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.06840714" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.06840714" />
       <window_info anchor="bottom" id="TODO" order="9" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" />
-      <window_info active="true" anchor="right" id="Run" order="3" visible="true" weight="0.42729676" />
+      <window_info anchor="right" id="Run" order="3" visible="true" weight="0.42729676" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.32950193" />
       <window_info anchor="bottom" id="Python Console" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -359,18 +354,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/discord/discord_bot.py</url>
-          <line>55</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/discord/discord_bot.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="12" />
     </breakpoint-manager>
   </component>
@@ -477,8 +460,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/discord/discord_bot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="66" column="34" lean-forward="true" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="34" />
+        <state relative-caret-position="736">
+          <caret line="74" column="118" selection-start-line="74" selection-start-column="118" selection-end-line="74" selection-end-column="118" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
