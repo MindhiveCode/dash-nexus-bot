@@ -78,7 +78,7 @@ async def on_message(message):
         fancy_message += "\n"
         fancy_message += "**Payout Date (Estimated):**  {:%B %d, %Y @ %H:%M:%S} UTC".format(payment_date)
         fancy_message += "\n \n"
-        fancy_message += "_Exact timing is a projected based on average block times and may not be completely accurate."
+        fancy_message += "_Exact timing is a projected based on average block times and may not be completely accurate._"
 
         if str(message.channel.type) == "private":
             pass
