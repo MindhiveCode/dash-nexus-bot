@@ -121,20 +121,24 @@ async def on_message(message):
 
         for prop in props_list:
             if len(fancy_message) < 1750:
+                fancy_message += "-------------------------------"
+                fancy_message += '\n'
                 fancy_message += "**Title:** {}".format(prop[0])
                 fancy_message += '\n'
                 fancy_message += "**Absolute Votes:** {} -> _{}%_".format(prop[2], prop[3])
                 fancy_message += "\n"
                 fancy_message += "**Link:** <{}>".format(prop[1])
-                fancy_message += '\n \n'
+                fancy_message += "\n"
 
             else:
+                fancy_message_2 += "-------------------------------"
+                fancy_message_2 += '\n'
                 fancy_message_2 += "**Title:** {}".format(prop[0])
                 fancy_message_2 += '\n'
                 fancy_message_2 += "**Absolute Votes:** {} -> _{}%_".format(prop[2], prop[3])
                 fancy_message_2 += "\n"
                 fancy_message_2 += "**Link:** <{}>".format(prop[1])
-                fancy_message_2 += '\n \n'
+                fancy_message_2 += "\n"
 
         print(message.author.mention)
 
@@ -146,7 +150,7 @@ async def on_message(message):
         try:
             await client.send_message(message.author, ("**Proposals that will be funded:** \n \n" + fancy_message + "\n"))
             if len(fancy_message_2) > 1:
-                await client.send_message(message.author, ('**Proposals that will be funded (continued):** \n \n' + fancy_message_2 + "\n"))
+                await client.send_message(message.author, (fancy_message_2 + "\n"))
         except Exception as e:
             print(e)
             await client.send_message(message.author, "Failed to send message. We are investigating.")
