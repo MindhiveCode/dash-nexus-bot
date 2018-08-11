@@ -5,6 +5,7 @@ import datetime
 
 from lib.diff_checker import get_new, props_sorted
 from lib.cycle_checker import get_cycle_info
+from lib.blog import parse_posts, get_posts
 
 BOT_PREFIX = ("?", "!")
 BOT_TOKEN = os.environ.get("DISCORD_TOKEN")
@@ -12,9 +13,10 @@ client = Bot(command_prefix=BOT_PREFIX)
 
 
 commands_list = [
-    "!GovHelp",
+    "!Nexus",
     "!Proposals",
     "!Cycle",
+    "!News"
 ]
 
 # For sending to the #proposals channel
@@ -35,9 +37,52 @@ async def on_message(message):
         for command in commands_list:
             reply += (command + "\n")
 
-        msg = "{} **Commands:** \n{}".format(message.author.mention, reply).format(message)
+        msg = "Please note, we will e deprecating !GovHelp in favor of !Nexus soon."
+        await client.send_message(message.channel, msg)
+
+        msg = "{} \n **Commands:** \n{}".format(message.author.mention, reply).format(message)
+        await client.send_message(message.channel, msg)
+
+    # Help information
+    reply = str()
+    if message.content.upper().startswith('!NEXUS'):
+        for command in commands_list:
+            reply += (command + "\n")
+
+        msg = "{} \n**Commands:** \n{}".format(message.author.mention, reply).format(message)
 
         await client.send_message(message.channel, msg)
+
+    # Blog
+    if message.content.upper().startswith("!NEWS"):
+        posts = parse_posts(get_posts())
+        print(posts)
+
+        fancy_blog = str()
+
+        for post in posts.values():
+            fancy_blog += "-------------------------------"
+            fancy_blog += '\n'
+            fancy_blog += "**Title:** {}".format(post['title'])
+            fancy_blog += "\n"
+            fancy_blog += "**Subtitle:** {}".format(post['subtitle'])
+            fancy_blog += "\n"
+            fancy_blog += "**URL:** <{}>".format(post['url'])
+            fancy_blog += "\n"
+
+
+        if str(message.channel.type) == "private":
+            pass
+        else:
+            await client.send_message(message.channel, "{} Check your DM's for a reply.".format(message.author.mention))
+
+        try:
+            await client.send_message(message.author, ("**Blog Posts** \n \n" +
+                                                       str(fancy_blog) + "\n"))
+        except Exception as e:
+            print(e)
+            await client.send_message(message.author, "Failed to send message. We are investigating.")
+
 
     # Cycle information
     if message.content.upper().startswith('!CYCLE'):
@@ -163,7 +208,7 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    await client.change_presence(game=Game(name="!GovHelp to list commands", type=1))
+    await client.change_presence(game=Game(name="!Nexus to list commands", type=1))
     print("Logged in as " + client.user.name)
 
 
