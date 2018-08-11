@@ -59,13 +59,18 @@ def parse_posts(data):
             url = medium_base + post['uniqueSlug']
 
             # url = "https://medium.com/dashnexus/prototypes-iot-decentralized-governance-27c5ae35d464"
-            parsed_data[post['id']] = {"title": post['title'], "url": url, "subtitle": post['content']['subtitle']}
+            parsed_data[post['id']] = {
+                "title": post['title'],
+                "url": url,
+                "subtitle": post['content']['subtitle'],
+                "timestamp": post['createdAt']
+            }
 
             counter += 1
         else:
             continue
 
-    # print(parsed_data)
+    print(parsed_data)
 
     return parsed_data
 

@@ -56,11 +56,21 @@ async def on_message(message):
     # Blog
     if message.content.upper().startswith("!NEWS"):
         posts = parse_posts(get_posts())
-        print(posts)
 
         fancy_blog = str()
 
+        date = datetime.datetime.now()
+
         for post in posts.values():
+            try:
+                timestamp_ms = post['timestamp']
+                timestamp = (timestamp_ms / 1000.0)
+                date = datetime.datetime.fromtimestamp(timestamp)
+            except Exception as e:
+                print("Failed")
+                print(post['timestamp'])
+                print(e)
+
             fancy_blog += "-------------------------------"
             fancy_blog += '\n'
             fancy_blog += "**Title:** {}".format(post['title'])
@@ -69,7 +79,8 @@ async def on_message(message):
             fancy_blog += "\n"
             fancy_blog += "**URL:** <{}>".format(post['url'])
             fancy_blog += "\n"
-
+            fancy_blog += "**Date Published:** _{}_".format(date.strftime("%B %d, %Y"))
+            fancy_blog += "\n"
 
         if str(message.channel.type) == "private":
             pass
@@ -82,7 +93,6 @@ async def on_message(message):
         except Exception as e:
             print(e)
             await client.send_message(message.author, "Failed to send message. We are investigating.")
-
 
     # Cycle information
     if message.content.upper().startswith('!CYCLE'):

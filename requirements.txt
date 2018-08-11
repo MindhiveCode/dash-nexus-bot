@@ -5,3 +5,4 @@ boto
 discord
 aiohttp
 pandas
+seaborn
