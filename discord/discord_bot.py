@@ -126,9 +126,9 @@ async def on_message(message):
         fancy_message = str()
 
         now = datetime.datetime.now()
-        countdown = (now - voting_close)
+        countdown = now - voting_close
 
-        fancy_message += "**Countdown to voting close:** {:%d Days, %H Hours %M Minutes}".format(countdown)
+        fancy_message += "**Countdown to voting close:** {}".format(str(countdown))
         fancy_message += "\n"
         fancy_message += "**Remaining Funds Available:**  {}/{}".format(avail, total)
         fancy_message += "\n"
