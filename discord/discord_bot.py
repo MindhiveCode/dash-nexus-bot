@@ -125,6 +125,11 @@ async def on_message(message):
         projection = round(projection, 2)
         fancy_message = str()
 
+        now = datetime.datetime.now()
+        countdown = (now - voting_close)
+
+        fancy_message += "**Countdown to voting close:** {:%d Days, %H Hours %M Minutes}".format(countdown)
+        fancy_message += "\n"
         fancy_message += "**Remaining Funds Available:**  {}/{}".format(avail, total)
         fancy_message += "\n"
         fancy_message += "**Remaining After Likely Allocation (Absolute Votes > 250):**  {}/{}".format(round((total-projection), 2), total)
