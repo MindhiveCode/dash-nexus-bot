@@ -1,5 +1,7 @@
 import requests
-import seaborn as sns
+# import seaborn as sns
+from plotly import plotly as plty
+import plotly.graph_objs as go
 import pandas as pd
 import os
 import time
@@ -28,10 +30,12 @@ def get_votes(p_hash="2f09a8b36477c1f7be2b8e3153b32a67f8438172ae0b0fd6370ea00c63
     return data
 
 
-def graph_votes(vote_data_df):
+def seaborn_graph(vote_data_df, p_data):
     # Just have to graph it now
 
-    g = sns.relplot(x="Date", y="Cumulative Votes", kind="line", data=vote_data_df)
+    g = sns.relplot(x="Date", y="Cumulative Votes", title=p_data['title'], kind="line", data=vote_data_df)
+    # g = sns.relplot(x="Date", y="SMA", kind="line", title="Kuva" ,data=vote_data_df)
+
     g.fig.autofmt_xdate()
     g.fig.set_size_inches(w=6, h=3)
 
@@ -43,17 +47,59 @@ def graph_votes(vote_data_df):
         return False
 
 
+def plotly_graph(dataframe, proposal_info):
+
+    # Create a trace
+    trace = go.Scatter(
+        x=dataframe['Date'],
+        y=dataframe['Cumulative Votes'],
+        mode="lines",
+        line=dict(
+            width=4
+        )
+    )
+
+    data = [trace]
+
+    # Edit the layout
+    layout = dict(title=proposal_info['title'],
+                  xaxis=dict(title='Date'),
+                  yaxis=dict(title='Cumulative Votes'),
+                  )
+
+    fig = dict(data=data, layout=layout)
+
+    plty.image.save_as(fig, filename="plotly.png", scale=2)
+
+    return True
+
+
 def convert_to_dataframe(vote_data_dict):
     df = pd.DataFrame.from_records(vote_data_dict)
     df['Date'] = pd.to_datetime(df['VoteTime'], origin='unix', unit='s')
     df.sort_values(by=['VoteTime'], ascending=True, inplace=True)
     df['Cumulative Votes'] = df.Math.cumsum()
+    # df['SMA'] = df['Cumulative Votes'].rolling(window=5).mean
     # print(df.head())
 
     return df
 
 
 if __name__ == "__main__":
-    vote_data = get_votes(p_hash=nexus_hash)
+    cur_hash = nexus_hash
+
+    "https://www.dashcentral.org/api/v1/proposal?hash=71785b4546ca23a9b1238a72e4eaf2c4de9c9c5103a833a931064b66d2e3d624"
+
+    # Get Proposal Data
+    base_url = "https://www.dashcentral.org/api/v1"
+    query = "/proposal?hash="
+    proposal_data_url = base_url + query + cur_hash
+    response = requests.get(proposal_data_url)
+    proposal_info = response.json()['proposal']
+
+    # Get Vote Data
+    vote_data = get_votes(p_hash=cur_hash)
     vote_df = convert_to_dataframe(vote_data)
-    graph = graph_votes(vote_df)
+
+    # Graph
+    graph = plotly_graph(vote_df, proposal_info)

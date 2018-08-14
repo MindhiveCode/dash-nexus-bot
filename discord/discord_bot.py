@@ -138,7 +138,7 @@ async def on_message(message):
         fancy_message += "\n"
         fancy_message += "**Payout Date (Estimated):**  {:%B %d, %Y @ %H:%M:%S} UTC".format(payment_date)
         fancy_message += "\n \n"
-        fancy_message += "_Exact timing is a projected based on average block times and may not be completely accurate._"
+        fancy_message += "_Exact timing is a projection based on average block times and may not be completely accurate._"
 
         if str(message.channel.type) == "private":
             pass
@@ -212,7 +212,11 @@ async def on_message(message):
             if len(fancy_message_2) > 1:
                 await client.send_message(message.author, (fancy_message_2 + "\n"))
         except Exception as e:
+            print("Most likely ran into a problem due to the length of the message.")
+            print("Message 1 length: {}".format(len(fancy_message)))
+            print("Message 2 length: {}").format(len(fancy_message_2))
             print(e)
+
             await client.send_message(message.author, "Failed to send message. We are investigating.")
 
         """

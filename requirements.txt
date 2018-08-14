@@ -6,3 +6,4 @@ discord
 aiohttp
 pandas
 seaborn
+plotly
