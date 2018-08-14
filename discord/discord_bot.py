@@ -180,7 +180,7 @@ async def on_message(message):
         fancy_message_2 = str()
 
         for prop in props_list:
-            if len(fancy_message) < 1750:
+            if len(fancy_message) < 1600:
                 fancy_message += "-------------------------------"
                 fancy_message += '\n'
                 fancy_message += "**Title:** {}".format(prop[0])
