@@ -27,8 +27,18 @@ def handle_concept():
     return "OK"
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET'])
 def handle_index():
+    # data = json.loads(request.data)
+
+    # print(data)
+    # pprint(data)
+
+    return "OK"
+
+
+@app.route('/slack', methods=['POST'])
+def handle_slack():
     data = json.loads(request.data)
 
     print(data)
