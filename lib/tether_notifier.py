@@ -125,7 +125,7 @@ def send_email(em_content):
     emails = ['jeff@mindhive.io', 'yuri@mindhive.io', 'bc@daim.io']
 
     for email in emails:
-        to_email = Email(emails)
+        to_email = Email(email)
         subject = "Tether movement deteched"
         content = Content("text/plain", em_content)
         mail = Mail(from_email, subject, to_email, content)
