@@ -10,7 +10,7 @@ vote_endpoint = ''
 vote_cache = 'get_votes'
 
 # Set this to be the change delta you want to trigger your notifications
-delta_setting = os.getenv('DELTA_SETTING', 1)
+delta_setting = int(os.getenv('DELTA_SETTING', 1))
 
 
 def fetch_votes(proposal_hash='fb1d84dd8765ade8aa8cac8dadd96b27bf7223834b93edaf5ed08a5ec0d0d03f'):
