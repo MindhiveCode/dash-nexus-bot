@@ -13,6 +13,7 @@ vote_cache = 'get_votes'
 # Set this to be the change delta you want to trigger your notifications
 delta_setting = int(os.getenv('DELTA_SETTING', 1))
 
+
 def fetch_votes(proposal_hash='fb1d84dd8765ade8aa8cac8dadd96b27bf7223834b93edaf5ed08a5ec0d0d03f'):
     url = 'http://dash-stats.mindhive.io:5000/api/get_votes?proposal_hash={}'.format(proposal_hash)
     vote_data_raw = requests.request(method='GET', url=url).text
@@ -176,8 +177,11 @@ def webhook_message(message_data):
     return True
 
 
-def check_file(name):
-    if os.path.exists('tmp/cache/{}.json'.format(name)):
+def check_cache(name):
+    import redis
+    db = redis.from_url(os.environ.get("REDIS_URL"))
+    if db.get(name):
+        print("Found cache data, continuing and then comparing against this.")
         return True
     else:
         return False
@@ -254,10 +258,8 @@ def gen_message_2(proposal_data):
 def check_for_updates():
     new_data = poll_dash_central()
 
-    print(new_data)
-
     # Check to make sure that we have cached data before continuing
-    if check_file('dc_data'):
+    if check_cache('dc_data'):
         old_data = read_cache("dc_data")
     else:
         write_cache(new_data, "dc_data")

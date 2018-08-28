@@ -12,6 +12,7 @@ def check_cache(name):
     import redis
     db = redis.from_url(os.environ.get("REDIS_URL"))
     if db.get(name):
+        print("Found cache data, continuing and then comparing against this.")
         return True
     else:
         return False
@@ -67,6 +68,40 @@ def poll_omni_explorer_property():
         sys.exit(1)
 
 
+def send_slack_message(amount, txid):
+    import requests
+    post_url = os.environ.get("SLACK_TETHER_WEBHOOK")
+
+    amount_rnd = round(float(amount), 2)
+
+    payload={"text": "{:,} Tether just moved. Check out the tx details <https://api.omniexplorer.info/v1/transaction/tx/{}|here!>".format(amount_rnd, txid),
+                "username": "Tether Bot",
+                "channel": "#news",
+                "icon_url": "https://www.omniexplorer.info/c1a2b1ea01845d292661c605b31c0581.png"}
+
+    print(payload)
+
+    response = requests.post(post_url, json=payload)
+
+    print(response)
+
+
+def send_email(em_content):
+    from_email = Email("tether@fakexchange.com")
+
+    emails = ['jeff@mindhive.io', 'yuri@mindhive.io', 'bc@daim.io']
+
+    for email in emails:
+        to_email = Email(email)
+        subject = "Tether movement deteched"
+        content = Content("text/plain", em_content)
+        mail = Mail(from_email, subject, to_email, content)
+        response = sg.client.mail.send.post(request_body=mail.get())
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+
+
 def check_for_movement():
     # Check for movement here
 
@@ -96,41 +131,7 @@ def check_for_movement():
     else:
         print("No movement detected, sleeping for now.")
         sys.exit(1)
-
-
-def send_slack_message(amount, txid):
-    import requests
-    post_url = os.environ.get("SLACK_TETHER_WEBHOOK")
-
-    amount_rnd = round(float(amount), 2)
-
-    payload={"text": "{:,} Tether just moved. Check out the tx details <https://api.omniexplorer.info/v1/transaction/tx/{}|here!>".format(amount_rnd, txid),
-                "username": "Tether Bot",
-                "channel": "#news",
-                "icon_url": "https://www.omniexplorer.info/c1a2b1ea01845d292661c605b31c0581.png"}
-
-    print(payload)
-
-    response = requests.post(post_url, json=payload)
-
-    print(response)
     print(response.status_code)
-
-
-def send_email(em_content):
-    from_email = Email("tether@fakexchange.com")
-
-    emails = ['jeff@mindhive.io', 'yuri@mindhive.io', 'bc@daim.io']
-
-    for email in emails:
-        to_email = Email(email)
-        subject = "Tether movement deteched"
-        content = Content("text/plain", em_content)
-        mail = Mail(from_email, subject, to_email, content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
 
 
 if __name__ == "__main__":
