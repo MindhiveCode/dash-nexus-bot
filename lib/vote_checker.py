@@ -157,7 +157,7 @@ def poll_dash_central():
 def webhook_message(message_data):
     # Set the webhook_url to the one provided by Slack when you
     # create the webhook at https://my.slack.com/services/new/incoming-webhook/
-    webhook_url = os.getenv('WEBHOOK_URL')
+    webhook_url = os.getenv('SLACK_VOTES_WEBHOOK')
 
     # slack_data = {'text': message_data}
     slack_data = message_data
