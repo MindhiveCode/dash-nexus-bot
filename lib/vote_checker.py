@@ -2,9 +2,9 @@ import json
 import requests
 import time
 import os
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from datetime import datetime
-import s3_integration
+# import s3_integration
 
 vote_endpoint = ''
 vote_cache = 'get_votes'
