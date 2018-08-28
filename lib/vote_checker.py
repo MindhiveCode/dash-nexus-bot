@@ -4,6 +4,7 @@ import time
 import os
 # import matplotlib.pyplot as plt
 from datetime import datetime
+
 # import s3_integration
 
 vote_endpoint = ''
@@ -11,7 +12,6 @@ vote_cache = 'get_votes'
 
 # Set this to be the change delta you want to trigger your notifications
 delta_setting = int(os.getenv('DELTA_SETTING', 1))
-
 
 def fetch_votes(proposal_hash='fb1d84dd8765ade8aa8cac8dadd96b27bf7223834b93edaf5ed08a5ec0d0d03f'):
     url = 'http://dash-stats.mindhive.io:5000/api/get_votes?proposal_hash={}'.format(proposal_hash)
@@ -183,13 +183,24 @@ def check_file(name):
         return False
 
 
-def write_json(data, name):
-    if not os.path.exists('tmp/cache'):
-        os.makedirs('tmp/cache')
+def write_cache(data, name):
+    import redis
+    db = redis.from_url(os.environ.get("REDIS_URL"))
+    try:
+        db.set(name, json.dumps(data))
+        return True
+    except Exception as e:
+        print(e)
+        print("Failed to write to cache")
 
-    with open("tmp/cache/{}.json".format(name), 'w') as json_stuff:
-        json.dump(data, json_stuff)
-    return True
+
+def read_cache(filename):
+    import redis
+
+    db = redis.from_url(os.environ.get("REDIS_URL"), decode_responses=True)
+    data = json.loads(db.get(filename))
+
+    return data
 
 
 def gen_message_2(proposal_data):
@@ -240,35 +251,17 @@ def gen_message_2(proposal_data):
     return message
 
 
-def read_json(filename):
-    # Made this file path HARD CODED from dash_ninja.py
-    try:
-        with open("tmp/cache/{}.json".format(filename), 'r') as json_stuff:
-            data_dict = json.loads(json_stuff)
-    except TypeError as e:
-        try:
-            with open("tmp/cache/{}.json".format(filename), 'r') as json_stuff:
-                json_stuff = json_stuff.read()
-                data_dict = json.loads(json_stuff)
-        except Exception as e:
-            print(e)
-            data_dict = {}
-    return data_dict
-
-
 def check_for_updates():
     new_data = poll_dash_central()
 
+    print(new_data)
+
     # Check to make sure that we have cached data before continuing
     if check_file('dc_data'):
-        old_data = read_json("dc_data")
+        old_data = read_cache("dc_data")
     else:
-        write_json(new_data, "dc_data")
-        old_data = read_json("dc_data")
-
-    # Calculate the difference between our old data and our new data
-    change_delta = (int(new_data['remaining_yes_votes_until_funding']) -
-                    (int(old_data['remaining_yes_votes_until_funding'])))
+        write_cache(new_data, "dc_data")
+        old_data = read_cache("dc_data")
 
     yes_delta = 0
     no_delta = 0
@@ -290,7 +283,7 @@ def check_for_updates():
     new_data['deltas'] = deltas
 
     if yes_delta > delta_setting or no_delta > delta_setting:
-        write_json(new_data, "dc_data")  # Update our persistent storage
+        write_cache(new_data, "dc_data")  # Update our persistent storage
         webhook_message(gen_message_2(new_data))  # Send message via Webhook
         print("Ran once, fired off update. Delta Y:{} N:{}".format(yes_delta, no_delta))
     else:

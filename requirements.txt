@@ -8,3 +8,5 @@ pandas
 seaborn
 plotly
 sendgrid
+redis-simple-cache
+redis

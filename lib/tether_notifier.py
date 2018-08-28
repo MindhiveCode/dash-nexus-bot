@@ -8,35 +8,33 @@ sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 # sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
 
 
-def check_file(name):
-    if os.path.exists('tmp/cache/{}.json'.format(name)):
+def check_cache(name):
+    import redis
+    db = redis.from_url(os.environ.get("REDIS_URL"))
+    if db.get(name):
         return True
     else:
         return False
 
 
-def write_json(data, name):
-    if not os.path.exists('tmp/cache'):
-        os.makedirs('tmp/cache')
-
-    with open("tmp/cache/{}.json".format(name), 'w') as json_stuff:
-        json.dump(data, json_stuff)
-    return True
-
-
-def read_json(filename):
+def write_cache(data, name):
+    import redis
+    db = redis.from_url(os.environ.get("REDIS_URL"))
     try:
-        with open("tmp/cache/{}.json".format(filename), 'r') as json_stuff:
-            data_dict = json.loads(json_stuff)
-    except TypeError as e:
-        try:
-            with open("tmp/cache/{}.json".format(filename), 'r') as json_stuff:
-                json_stuff = json_stuff.read()
-                data_dict = json.loads(json_stuff)
-        except Exception as e:
-            print(e)
-            data_dict = {}
-    return data_dict
+        db.set(name, json.dumps(data))
+        return True
+    except Exception as e:
+        print(e)
+        print("Failed to write to cache")
+
+
+def read_cache(filename):
+    import redis
+
+    db = redis.from_url(os.environ.get("REDIS_URL"), decode_responses=True)
+    data = json.loads(db.get(filename))
+
+    return data
 
 
 def poll_omni_explorer_address():
@@ -75,11 +73,11 @@ def check_for_movement():
     new_data = poll_omni_explorer_property()
 
     # Check to make sure that we have cached data before continuing
-    if check_file('tether_data'):
-        old_data = read_json("tether_data")
+    if check_cache('tether_data'):
+        old_data = read_cache("tether_data")
     else:
-        write_json(new_data, "tether_data")
-        old_data = read_json("tether_data")
+        write_cache(new_data, "tether_data")
+        old_data = read_cache("tether_data")
 
     # Calculate the difference between our old data and our new data
     movement = (float(new_data['totaltokens']) - (float(old_data['totaltokens'])))
