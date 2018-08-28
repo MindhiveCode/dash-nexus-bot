@@ -72,9 +72,9 @@ def send_slack_message(amount, txid):
     import requests
     post_url = os.environ.get("SLACK_TETHER_WEBHOOK")
 
-    amount_rnd = round(float(amount), 2)
+    amount_rnd = round(float(amount))
 
-    payload={"text": "{:,} Tether just moved. Check out the tx details <https://api.omniexplorer.info/v1/transaction/tx/{}|here!>".format(amount_rnd, txid),
+    payload={"text": "${:,} Tether just moved. Check out the tx details <https://api.omniexplorer.info/v1/transaction/tx/{}|here!>".format(amount_rnd, txid),
                 "username": "Tether Bot",
                 "channel": "#news",
                 "icon_url": "https://www.omniexplorer.info/c1a2b1ea01845d292661c605b31c0581.png"}
