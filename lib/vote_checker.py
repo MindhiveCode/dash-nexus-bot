@@ -218,12 +218,12 @@ def gen_message_2(proposal_data):
                 "fields": [
                     {
                         "title": "Yes Votes",
-                        "value": "{} (+{})".format(proposal_data['yes'], proposal_data['deltas']['yes_delta']),
+                        "value": "{} (Δ{})".format(proposal_data['yes'], proposal_data['deltas']['yes_delta']),
                         "short": True
                     },
                     {
                         "title": "No Votes",
-                        "value": "{} (+{})".format(proposal_data['no'], proposal_data['deltas']['no_delta']),
+                        "value": "{} (Δ{})".format(proposal_data['no'], proposal_data['deltas']['no_delta']),
                         "short": True
                     },
                     {
