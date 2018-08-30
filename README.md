@@ -20,6 +20,9 @@ We use a `web` process to receive webhooks from external services and run a `wor
 * boto
 * discord
 * pandas
+* sendgrid
+* plotly
+* redis
 
 ### Environmental Variables
 * `DC_API_URL` (To fetch DashCentral Data)
@@ -27,6 +30,14 @@ We use a `web` process to receive webhooks from external services and run a `wor
 * `AWS_ACCESS_KEY` (For S3 storage)
 * `S3_BUCKET` (For S3 Storage)
 * `DISCORD TOKEN` (For the Discord Bot)
+* `REDIS_URL` (For the persistent data store to do diffs)
+* `SENDGRID_API_KEY` (For the tether messages)
+* `PROPOSAL_HASH` (For the vote_watcher)
+* `ENVIRONMENT` (PRODUCTION/DEVELOPMENT)
+* `SLACK_VOTES_WEBHOOK` (The webhook URL for Slack that sends vote updates to the #dashcentral channel)
+* `SLACK_TETHER_WEBHOOK` (The webhook URL to for Slack that sends messages to the #news channel)
+* `DELTA_SETTING` (The delta required to trigger an event in regards to vote changes on DC)
+
 
 # Components
 
@@ -34,18 +45,18 @@ Right now we have a prototype of the webhook receiver that will eventually handl
 
 We also have a prototype Discord Bot, and will soon be bringing over a Slack bot prototype.
 
+We now have two scheduled tasks (using Heroku Scheduler) that run every 10 minutes to check for any changes to the proposal vote count, and to check if any new Tether have been created.
+
+The Tether bot sends a slack notification and sends an e-mail from mailto:tether@fakexchange.com
 
 ## Discord Bot
 
-Responds to the following commands
+* Replies to `!Proposals` with a list of all currently active proposals and their vote counts.
+* Replies to `!Cycle `with the latest countdown information regarding the voting cycle.
+* Replies to `!News` with the latest blog posts on our Medium blog
+* Replies to `!Nexus` with a list of possible commands
    
-   `!GovHelp`
    
-   `!Proposals`
-   
-   `!Cycle`
-   
-
 ## Slack Bot
 
 TBD
