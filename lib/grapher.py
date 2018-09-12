@@ -12,6 +12,33 @@ nexus_hash = "7877338b947d7fe25d4dcc80979ee1f918736596677188ebadc79e5b9009d847"
 nexus_hash_2 = "dc43dc408ddc7d7b7e064fda48aa0936be21d1ea67b538bf64ff6fdc6ecb550e"
 kuva_hash = "ad48554075202678bfacb02c40c31529297a50d270965f18f1267dead22bd161"
 dach_hash = "197ca53aa00d405992d4a4802d098732748a05839f0fd3d718035a66ebcb7a2a"
+ben_swann = "916ff7d0f3dbd117457df5be537602912915fa7c07f427e12edacf21bfb09785"
+
+
+def get_votes_from_sql():
+    df = pd.read_sql_query("""
+
+        select 
+                        y.masternode_vin
+                        ,y.proposal_hash
+                        ,y.vote_value
+
+
+                        from 
+                        (
+                        SELECT distinct
+                        masternode_vin
+                        , proposal_hash
+                        ,  vote_value
+                        ,timestamp1
+                        ,rank() over (partition by concat(x.masternode_vin,x.proposal_hash) order by x.timestamp1 desc) as ranking
+                        FROM dash.vvotesproposalmasternodesdetail x 
+                        where budget_period = {}
+                        order by 1,2,3,4,5 desc) y
+                        where 
+                        y.ranking = 1
+
+        """.format(x), con=connection)
 
 
 def get_votes(p_hash="2f09a8b36477c1f7be2b8e3153b32a67f8438172ae0b0fd6370ea00c6352a762"):
@@ -91,7 +118,7 @@ def convert_to_dataframe(vote_data_dict):
 
 
 if __name__ == "__main__":
-    cur_hash = dach_hash
+    cur_hash = ben_swann
 
     # Get Proposal Data
     base_url = "https://www.dashcentral.org/api/v1"

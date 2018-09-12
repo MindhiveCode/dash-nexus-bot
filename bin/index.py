@@ -1,10 +1,19 @@
 from flask import Flask, request
 import os
-import json
+from bin.mock_dc_response import *
+from flask import jsonify
 
 from pprint import pprint
 
 app = Flask(__name__)
+
+
+@app.route('/budget', methods=['GET'])
+def handle_budget():
+    data = combine(get_dc_data(), get_valid_list())
+    response = jsonify(data)
+
+    return response
 
 
 @app.route('/new_proposal', methods=['POST'])
