@@ -7,7 +7,7 @@ import datetime
 
 
 def get_dc_data():
-    dc_url = os.getenv("DC_API_URL", "https://www.dashcentral.org/api/v1/budget")
+    dc_url = os.getenv("https://www.dashcentral.org/api/v1/budget")
     budget_data = requests.get(dc_url)
 
     if budget_data.status_code == 200:
@@ -20,7 +20,7 @@ def get_dc_data():
 
 
 def get_valid_list():
-    insight_url = os.getenv("INSIGHT_VALID_URL", "https://insight.dashevo.org/insight-api-dash/gobject/list/valid")
+    insight_url = os.getenv("https://insight.dashevo.org/insight-api-dash/gobject/list/valid")
     valid_response = requests.get(insight_url)
 
     if valid_response.status_code == 200:
