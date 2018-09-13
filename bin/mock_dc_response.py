@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import datetime
+import functools
 
 
 def get_dc_data():
@@ -20,7 +21,7 @@ def get_dc_data():
 
 
 def get_valid_list():
-    insight_url = "https://insight.dashevo.org/insight-api-dash/gobject/list/valid"
+    insight_url = "https://insight.dashevo.org/insight-api-dash/gobject/list/proposal"
     valid_response = requests.get(insight_url)
 
     if valid_response.status_code == 200:
@@ -32,17 +33,18 @@ def get_valid_list():
     return valid_proposals
 
 
-def check_superblock_data():
+@functools.lru_cache(maxsize=1)
+def check_governance_info():
     insight_url = "https://insight.dashevo.org/insight-api-dash/gobject/info"
-    network_response = requests.get(insight_url)
+    governance_response = requests.get(insight_url)
 
-    if network_response.status_code == 200:
-        network_info = network_response.json()
+    if governance_response.status_code == 200:
+        governance_info = governance_response.json()
     else:
         print("No response from Insight API. Exiting...")
         sys.exit(1)
 
-    return network_info
+    return governance_info
 
 
 def get_network_status():
@@ -66,7 +68,7 @@ def predict_sb_time(network_status=None, block_height=None):
     cur_blocktime = int(time.time())
 
     if block_height is None:
-        block_height = check_superblock_data()['result']['nextsuperblock']
+        block_height = check_governance_info()['result']['nextsuperblock']
 
     block_diff = block_height - cur_block
 
@@ -86,6 +88,91 @@ def get_unique_proposal_data(p_hash=""):
 
     print(p_info)
     return p_info
+
+
+def get_superblock_history():
+    month_s = 2592000
+    api_base_url = "https://api.dashintel.org"
+    api_url = api_base_url + "/mvdash_budget_period_breakdown?period_end=lt.{}".format(int(time.time()) - (2 * month_s))
+
+    sb_data = requests.get(api_url)
+
+    if sb_data.status_code == 200:
+        sb_data = sb_data.json()
+    else:
+        print("No response for Superblock Data... Exiting.")
+        sys.exit(1)
+
+    return sb_data
+
+
+@functools.lru_cache(maxsize=2)
+def get_cb_tx_for_sb(blockheight):
+    block_data_url = "https://insight.dash.org/insight-api-dash/block/{}".format(blockheight)
+    block_tx_response = requests.get(block_data_url)
+
+    if block_tx_response.status_code == 200:
+        block_tx = block_tx_response.json()['tx']
+    else:
+        print("Bad response for Superblock TX list.")
+        sys.exit(1)
+
+    # Coinbase tx are always the first output in every block so we select the first entry listed
+    cb_tx = block_tx[0]
+    tx_data_url = "https://insight.dash.org/insight-api-dash/tx/{}".format(cb_tx)
+
+    sb_tx_response = requests.get(tx_data_url)
+
+    if sb_tx_response.status_code == 200:
+        sb_tx_data = sb_tx_response.json()
+    else:
+        print("Bad response for Superblock TX payments")
+        sys.exit(1)
+
+    return sb_tx_data
+
+
+def check_zombie_status(proposal_info):
+    address = proposal_info['DataObject']['payment_address']
+    amount = proposal_info['DataObject']['payment_amount']
+    start_epoch = proposal_info['DataObject']['start_epoch']
+    end_epoch = proposal_info['DataObject']['end_epoch']
+
+    # Get last 2 superblock heights
+    sb_1_height = check_governance_info()['result']['lastsuperblock']
+    sb_2_height = int(sb_1_height) - 16616
+
+    # Pull payment info for the previous two superblocks
+    sb_1_data = get_cb_tx_for_sb(sb_1_height)
+    sb_2_data = get_cb_tx_for_sb(sb_2_height)
+
+    # If proposal hasn't be around long enough to be consider a zombie, then it can't be one
+    if start_epoch > sb_2_data['time']:
+        zombie_status = False
+        return zombie_status
+
+    # Check for payment in the most recent superblock and if we find one, set zombie = False
+    for vout in sb_1_data['vout']:
+        if address in vout['scriptPubKey']['addresses']:
+            # Found a payment to this address in there, definitely not a zombie
+            zombie_status = False
+            return zombie_status
+        else:
+            continue
+
+    # Check for payment in the superblock before that one and if we find one, set zombie = False
+    for vout in sb_2_data['vout']:
+        if address in vout['scriptPubKey']['addresses']:
+            # Found a payment to this address in there, definitely not a zombie
+            zombie_status = False
+            return zombie_status
+        else:
+            continue
+
+    # If we don't find a payment in the previous two superblocks, we're assuming it's a zombie
+    zombie_status = True
+
+    return zombie_status
 
 
 def combine(dc_data, valid_list):
@@ -130,10 +217,24 @@ def combine(dc_data, valid_list):
         else:
             continue
 
+    # Generate new dictionary for of key/value pairs rather than list for valid proposal list
+    kv_valid = dict()
+    for proposal in valid_list:
+        kv_valid[proposal["Hash"]] = proposal
+
+    # Mark zombie proposals
+    # If proposal has more than two payments total but hasn't received one in the past two superblocks, mark as zombie
+    for proposal in final_data:
+        if proposal['total_payment_count'] > 2:
+            zombie_status = check_zombie_status(kv_valid[proposal['hash']])
+            proposal.update({"isZombie": zombie_status})
+        else:
+            zombie_status = False
+            proposal.update({"isZombie": zombie_status})
+
     print("Fetched all missing data... Returning.")
 
     # Combine and prepare final dict
-
     dc_data['proposals'] = final_data
 
     return dc_data
