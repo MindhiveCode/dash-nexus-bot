@@ -43,8 +43,9 @@ def get_cb_tx_for_sb(blockheight):
 
 def calc_valid_sb(start_epoch, end_epoch):
     file_name = "budget_periods.json"
-    cur_dir = os.path.abspath(__file__)
-    new_path = os.path.join(cur_dir, "..", file_name)
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    new_path = os.path.join(cur_dir, file_name)
+    print(new_path)
     with open(new_path, 'r') as budget_period_json:
         sb_data = json.load(budget_period_json)
 
