@@ -78,11 +78,13 @@ target/
 celerybeat-schedule
 
 # SageMath parsed files
-*.sage.py
+*.sage.py/
 
 # Environments
+.idea
 .env
 .venv
+.idea/*
 env/
 venv/
 ENV/

@@ -1,6 +1,5 @@
 from flask import Flask, request
-import os
-from bin.mock_dc_response import *
+from lib.dc_monkey_patch import *
 from flask import jsonify
 
 from pprint import pprint
@@ -10,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/budget', methods=['GET'])
 def handle_budget():
-    data = combine(get_dc_data(), get_valid_list())
+    data = get_api_data()
     response = jsonify(data)
 
     return response

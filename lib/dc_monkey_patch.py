@@ -5,6 +5,7 @@ import sys
 import time
 import datetime
 import functools
+from lib.useful_snippets import UsefulFunctions
 
 
 def get_dc_data():
@@ -18,6 +19,27 @@ def get_dc_data():
         sys.exit(1)
 
     return proposals_dict
+
+
+def get_unique_proposal_data(p_hash=""):
+    hash_key = "dc_p_" + p_hash
+    if UsefulFunctions.check_cache(hash_key):
+        print("Found Redis entry for {}".format(hash_key))
+        return UsefulFunctions.read_cache(hash_key)
+    else:
+        dc_url = "https://www.dashcentral.org/api/v1/proposal?hash={}".format(p_hash)
+        p_info = requests.get(dc_url).json()
+
+        p_info = p_info['proposal']
+        p_info.pop('description_base64_bb', None)
+        p_info.pop('description_base64_html', None)
+        p_info.pop('comments', None)
+
+        UsefulFunctions.write_cache(p_info, hash_key, ex_time=3600)
+        print("Wrote Redis entry for {}".format(hash_key))
+
+        print(p_info)
+        return p_info
 
 
 def get_valid_list():
@@ -75,19 +97,6 @@ def predict_sb_time(network_status=None, block_height=None):
     predicted_block_time = int((block_diff * 2.625 * 60) + cur_blocktime)
 
     return predicted_block_time
-
-
-def get_unique_proposal_data(p_hash=""):
-    dc_url = "https://www.dashcentral.org/api/v1/proposal?hash={}".format(p_hash)
-    p_info = requests.get(dc_url).json()
-
-    p_info = p_info['proposal']
-    p_info.pop('description_base64_bb', None)
-    p_info.pop('description_base64_html', None)
-    p_info.pop('comments', None)
-
-    print(p_info)
-    return p_info
 
 
 def get_superblock_history():
@@ -238,6 +247,10 @@ def combine(dc_data, valid_list):
     dc_data['proposals'] = final_data
 
     return dc_data
+
+
+def get_api_data():
+    return combine(get_dc_data(), get_valid_list())
 
 
 if __name__ == "__main__":
