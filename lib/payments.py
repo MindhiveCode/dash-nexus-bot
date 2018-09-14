@@ -2,6 +2,7 @@ import requests
 import sys
 import json
 from decimal import *
+import os
 
 from lib.useful_snippets import UsefulFunctions
 
@@ -41,7 +42,10 @@ def get_cb_tx_for_sb(blockheight):
 
 
 def calc_valid_sb(start_epoch, end_epoch):
-    with open('../lib/budget_periods.json', 'r') as budget_period_json:
+    file_name = "budget_periods.json"
+    cur_dir = os.path.abspath(__file__)
+    new_path = os.path.join(cur_dir, "..", file_name)
+    with open(new_path, 'r') as budget_period_json:
         sb_data = json.load(budget_period_json)
 
     b_height_array = list()
