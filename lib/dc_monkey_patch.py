@@ -5,6 +5,7 @@ import sys
 import time
 import datetime
 import functools
+from lib.payments import *
 from lib.useful_snippets import UsefulFunctions
 
 
@@ -53,6 +54,56 @@ def get_valid_list():
         sys.exit(1)
 
     return valid_proposals
+
+
+def check_zombie_status(proposal_info):
+    # Cache Zombie status every 24 hours
+    hash_key = "ze_status_" + proposal_info['Hash']
+    if UsefulFunctions.check_cache(hash_key):
+        return UsefulFunctions.read_cache(hash_key)
+    else:
+        address = proposal_info['DataObject']['payment_address']
+        amount = proposal_info['DataObject']['payment_amount']
+        start_epoch = proposal_info['DataObject']['start_epoch']
+        end_epoch = proposal_info['DataObject']['end_epoch']
+
+        # Get last 2 superblock heights
+        sb_1_height = check_governance_info()['result']['lastsuperblock']
+        sb_2_height = int(sb_1_height) - 16616
+
+        # Pull payment info for the previous two superblocks
+        sb_1_data = get_cb_tx_for_sb(sb_1_height)
+        sb_2_data = get_cb_tx_for_sb(sb_2_height)
+
+        # If proposal hasn't be around long enough to be consider a zombie, then it can't be one
+        if start_epoch > sb_2_data['time']:
+            zombie_status = False
+            return zombie_status
+
+        # Check for payment in the most recent superblock and if we find one, set zombie = False
+        for vout in sb_1_data['vout']:
+            if address in vout['scriptPubKey']['addresses']:
+                # Found a payment to this address in there, definitely not a zombie
+                zombie_status = False
+                return zombie_status
+            else:
+                continue
+
+        # Check for payment in the superblock before that one and if we find one, set zombie = False
+        for vout in sb_2_data['vout']:
+            if address in vout['scriptPubKey']['addresses']:
+                # Found a payment to this address in there, definitely not a zombie
+                zombie_status = False
+                return zombie_status
+            else:
+                continue
+
+        # If we don't find a payment in the previous two superblocks, we're assuming it's a zombie
+        zombie_status = True
+
+        UsefulFunctions.write_cache(zombie_status, hash_key, ex_time=86400)
+
+    return zombie_status
 
 
 @functools.lru_cache(maxsize=1)
@@ -115,76 +166,10 @@ def get_superblock_history():
     return sb_data
 
 
-@functools.lru_cache(maxsize=2)
-def get_cb_tx_for_sb(blockheight):
-    block_data_url = "https://insight.dash.org/insight-api-dash/block/{}".format(blockheight)
-    block_tx_response = requests.get(block_data_url)
-
-    if block_tx_response.status_code == 200:
-        block_tx = block_tx_response.json()['tx']
-    else:
-        print("Bad response for Superblock TX list.")
-        sys.exit(1)
-
-    # Coinbase tx are always the first output in every block so we select the first entry listed
-    cb_tx = block_tx[0]
-    tx_data_url = "https://insight.dash.org/insight-api-dash/tx/{}".format(cb_tx)
-
-    sb_tx_response = requests.get(tx_data_url)
-
-    if sb_tx_response.status_code == 200:
-        sb_tx_data = sb_tx_response.json()
-    else:
-        print("Bad response for Superblock TX payments")
-        sys.exit(1)
-
-    return sb_tx_data
-
-
-def check_zombie_status(proposal_info):
-    address = proposal_info['DataObject']['payment_address']
-    amount = proposal_info['DataObject']['payment_amount']
-    start_epoch = proposal_info['DataObject']['start_epoch']
-    end_epoch = proposal_info['DataObject']['end_epoch']
-
-    # Get last 2 superblock heights
-    sb_1_height = check_governance_info()['result']['lastsuperblock']
-    sb_2_height = int(sb_1_height) - 16616
-
-    # Pull payment info for the previous two superblocks
-    sb_1_data = get_cb_tx_for_sb(sb_1_height)
-    sb_2_data = get_cb_tx_for_sb(sb_2_height)
-
-    # If proposal hasn't be around long enough to be consider a zombie, then it can't be one
-    if start_epoch > sb_2_data['time']:
-        zombie_status = False
-        return zombie_status
-
-    # Check for payment in the most recent superblock and if we find one, set zombie = False
-    for vout in sb_1_data['vout']:
-        if address in vout['scriptPubKey']['addresses']:
-            # Found a payment to this address in there, definitely not a zombie
-            zombie_status = False
-            return zombie_status
-        else:
-            continue
-
-    # Check for payment in the superblock before that one and if we find one, set zombie = False
-    for vout in sb_2_data['vout']:
-        if address in vout['scriptPubKey']['addresses']:
-            # Found a payment to this address in there, definitely not a zombie
-            zombie_status = False
-            return zombie_status
-        else:
-            continue
-
-    # If we don't find a payment in the previous two superblocks, we're assuming it's a zombie
-    zombie_status = True
-
-    return zombie_status
-
-
 def combine(dc_data, valid_list):
+    # Declare DC time string format
+    time_string = "%Y-%m-%d %X"
+
     # Generate list of proposal from DC
     dc_hashes = []
     for proposal in dc_data['proposals']:
@@ -216,11 +201,9 @@ def combine(dc_data, valid_list):
 
     # Remove expired proposals from Dash Central data
     final_data = []
-    time_string = "%Y-%m-%d %X"
     for proposal in dc_data['proposals']:
         end_time = datetime.datetime.strptime(proposal['date_end'], format(time_string))
         end_timestamp = end_time.timestamp()
-
         if end_timestamp > sb_time:
             final_data.append(proposal)
         else:
@@ -231,15 +214,40 @@ def combine(dc_data, valid_list):
     for proposal in valid_list:
         kv_valid[proposal["Hash"]] = proposal
 
+    # Check Superblock payments
+    cur_blockheight = get_network_status()['info']['blocks']
+    for proposal in dc_data['proposals']:
+        print("Checking payments")
+        # start_epoch = datetime.datetime.strptime(proposal['date_added'], format=time_string).timestamp()
+        # end_epoch = datetime.datetime.strptime(proposal['date_end'], format=time_string).timestamp()
+        amount = kv_valid[proposal['hash']]['DataObject']['payment_amount']
+        address = kv_valid[proposal['hash']]['DataObject']['payment_address']
+        start_epoch = kv_valid[proposal['hash']]['DataObject']['start_epoch']
+        end_epoch = kv_valid[proposal['hash']]['DataObject']['end_epoch']
+
+        # Add necessary fields
+        proposal.update({
+            "start_epoch": start_epoch,
+            "end_epoch": end_epoch,
+            "payment_address": address,
+            "payment_amount": amount
+        })
+
+        # Calculate payments
+
+        proposal.update({"superblock_payments": gen_funding_array(proposal, cur_blockheight)})
+
     # Mark zombie proposals
     # If proposal has more than two payments total but hasn't received one in the past two superblocks, mark as zombie
     for proposal in final_data:
+        print("Checking Zombie status")
         if proposal['total_payment_count'] > 2:
             zombie_status = check_zombie_status(kv_valid[proposal['hash']])
             proposal.update({"isZombie": zombie_status})
         else:
             zombie_status = False
             proposal.update({"isZombie": zombie_status})
+
 
     print("Fetched all missing data... Returning.")
 

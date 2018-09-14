@@ -20,7 +20,6 @@ class UsefulFunctions:
         """
         db = redis.from_url(os.environ.get("REDIS_URL"))
         if db.get(cache_key):
-            print("Found cache data, continuing and then comparing against this.")
             return True
         else:
             return False
