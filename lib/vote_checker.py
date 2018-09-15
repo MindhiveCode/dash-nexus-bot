@@ -15,13 +15,6 @@ vote_cache = 'get_votes'
 delta_setting = int(os.getenv('DELTA_SETTING', 1))
 
 
-def fetch_votes(proposal_hash='fb1d84dd8765ade8aa8cac8dadd96b27bf7223834b93edaf5ed08a5ec0d0d03f'):
-    url = 'http://dash-stats.mindhive.io:5000/api/get_votes?proposal_hash={}'.format(proposal_hash)
-    vote_data_raw = requests.request(method='GET', url=url).text
-    vote_data_dict = json.loads(vote_data_raw)
-    return vote_data_dict
-
-
 def prepare_votes(vote_data):
     yes_count = 0
     no_count = 0
@@ -68,8 +61,6 @@ def prepare_votes(vote_data):
 
 
 def graph(prepared_vote_data):
-    # --- FORMAT 2</pre>
-
     proposal_hash = prepared_vote_data[2]
 
     x = sorted(prepared_vote_data[0])
