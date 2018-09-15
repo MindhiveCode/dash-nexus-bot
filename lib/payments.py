@@ -104,7 +104,7 @@ def gen_funding_array(proposal_data, cur_block):
             else:
                 payment_dict.update({sb: "Not Paid"})
 
-        UsefulFunctions.write_cache(payment_dict, pay_hash_key, ex_time=259200)
+        UsefulFunctions.write_cache(payment_dict, pay_hash_key, ex_time=86400)
 
     return payment_dict
 

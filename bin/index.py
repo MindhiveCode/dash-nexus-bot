@@ -69,5 +69,15 @@ if __name__ == '__main__':
         if os.name == 'nt':
             app.run(host='127.0.0.1', port=port_config, debug=True)
         else:
+            try:
+                import redis
+                redis_url = os.getenv('REDIS_URL', '')
+                r = redis.from_url(redis_url)
+                r.flushall()
+                print("Successfully wiped Redis Cache... CONTINUING")
+            except Exception as e:
+                print("Failed to wipe Redis Cache ... CONTINUING")
+                print(e)
+
             app.run(host='0.0.0.0', port=port_config, debug=True)
 

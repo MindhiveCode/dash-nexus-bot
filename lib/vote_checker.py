@@ -4,6 +4,7 @@ import time
 import os
 # import matplotlib.pyplot as plt
 from datetime import datetime
+from lib.useful_snippets import UsefulFunctions
 
 # import s3_integration
 
@@ -177,36 +178,6 @@ def webhook_message(message_data):
     return True
 
 
-def check_cache(name):
-    import redis
-    db = redis.from_url(os.environ.get("REDIS_URL"))
-    if db.get(name):
-        print("Found cache data, continuing and then comparing against this.")
-        return True
-    else:
-        return False
-
-
-def write_cache(data, name):
-    import redis
-    db = redis.from_url(os.environ.get("REDIS_URL"))
-    try:
-        db.set(name, json.dumps(data))
-        return True
-    except Exception as e:
-        print(e)
-        print("Failed to write to cache")
-
-
-def read_cache(filename):
-    import redis
-
-    db = redis.from_url(os.environ.get("REDIS_URL"), decode_responses=True)
-    data = json.loads(db.get(filename))
-
-    return data
-
-
 def gen_message_2(proposal_data):
 
     message = {
@@ -259,11 +230,11 @@ def check_for_updates():
     new_data = poll_dash_central()
 
     # Check to make sure that we have cached data before continuing
-    if check_cache('dc_data'):
-        old_data = read_cache("dc_data")
+    if UsefulFunctions.check_cache('dc_data'):
+        old_data = UsefulFunctions.read_cache("dc_data")
     else:
-        write_cache(new_data, "dc_data")
-        old_data = read_cache("dc_data")
+        UsefulFunctions.write_cache(new_data, "dc_data")
+        old_data = UsefulFunctions.read_cache("dc_data")
 
     yes_delta = 0
     no_delta = 0
@@ -285,7 +256,7 @@ def check_for_updates():
     new_data['deltas'] = deltas
 
     if yes_delta > delta_setting or no_delta > delta_setting:
-        write_cache(new_data, "dc_data")  # Update our persistent storage
+        UsefulFunctions.write_cache(new_data, "dc_data")  # Update our persistent storage
         webhook_message(gen_message_2(new_data))  # Send message via Webhook
         print("Ran once, fired off update. Delta Y:{} N:{}".format(yes_delta, no_delta))
     else:
