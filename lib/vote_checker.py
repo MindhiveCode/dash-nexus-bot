@@ -256,7 +256,7 @@ def check_for_updates():
     new_data['deltas'] = deltas
 
     if yes_delta > delta_setting or no_delta > delta_setting:
-        UsefulFunctions.write_cache(new_data, "dc_data")  # Update our persistent storage
+        UsefulFunctions.write_cache(new_data, "dc_data", ex_time=172800)  # Update our persistent storage
         webhook_message(gen_message_2(new_data))  # Send message via Webhook
         print("Ran once, fired off update. Delta Y:{} N:{}".format(yes_delta, no_delta))
     else:
