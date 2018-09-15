@@ -100,9 +100,9 @@ def check_for_movement():
     
     """
 
-    if new_data['transactions']['00']['block'] > old_data-['transactions']['00']['block']:
+    if new_data['transactions'][0]['block'] > old_data['transactions'][0]['block']:
         movement_int = int(float(new_data['transactions']['00']['amount']))
-        txid = new_data['transactions']['00']['txid']
+        txid = new_data['transactions'][0]['txid']
     else:
         movement_int = 0
 
