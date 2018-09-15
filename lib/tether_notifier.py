@@ -110,7 +110,7 @@ def check_for_movement():
         content = """{} Tether moved from master address \n <a href="https://api.omniexplorer.info/v1/transaction/tx/{}">Block Explorer Link</a>""".format(movement_int, txid)
         # send_email(content)
         send_slack_message(amount, txid)
-        # write_json(new_data, 'tether_data')
+        UsefulFunctions.write_cache(new_data, "tether_data", ex_time=7776000)
         return True
 
     else:
