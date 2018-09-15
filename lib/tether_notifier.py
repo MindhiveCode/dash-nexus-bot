@@ -1,41 +1,12 @@
 import sendgrid
 import os
 import sys
-import json
+from lib.useful_snippets import UsefulFunctions
+
 from sendgrid.helpers.mail import *
 
 sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 # sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
-
-
-def check_cache(name):
-    import redis
-    db = redis.from_url(os.environ.get("REDIS_URL"))
-    if db.get(name):
-        print("Found cache data, continuing and then comparing against this.")
-        return True
-    else:
-        return False
-
-
-def write_cache(data, name):
-    import redis
-    db = redis.from_url(os.environ.get("REDIS_URL"))
-    try:
-        db.set(name, json.dumps(data))
-        return True
-    except Exception as e:
-        print(e)
-        print("Failed to write to cache")
-
-
-def read_cache(filename):
-    import redis
-
-    db = redis.from_url(os.environ.get("REDIS_URL"), decode_responses=True)
-    data = json.loads(db.get(filename))
-
-    return data
 
 
 def poll_omni_explorer_address():
@@ -50,6 +21,8 @@ def poll_omni_explorer_address():
     response = requests.request("POST", url, data=payload, headers=headers)
 
     if response.status_code == 200:
+        data = response.json()
+        print(response.json())
         return response.json()
     else:
         print("Bad API response, exiting for now.")
@@ -105,34 +78,46 @@ def send_email(em_content):
 def check_for_movement():
     # Check for movement here
 
-    new_data = poll_omni_explorer_property()
+    new_data = poll_omni_explorer_address()
 
     # Check to make sure that we have cached data before continuing
-    if check_cache('tether_data'):
-        old_data = read_cache("tether_data")
+    if UsefulFunctions.check_cache('tether_data'):
+        old_data = UsefulFunctions.read_cache("tether_data")
     else:
-        write_cache(new_data, "tether_data")
-        old_data = read_cache("tether_data")
+        UsefulFunctions.write_cache(new_data, "tether_data")
+        old_data = UsefulFunctions.read_cache("tether_data")
+
+    """
 
     # Calculate the difference between our old data and our new data
     movement = (float(new_data['totaltokens']) - (float(old_data['totaltokens'])))
 
     print(movement)
-
+    
     new_grant = new_data['issuances'][0]
     amount = new_grant['grant']
     txid = new_grant['txid']
+    
+    """
 
-    if movement > 0 or movement < 0:
-        content = """{} Tether moved from master address \n <a href="https://api.omniexplorer.info/v1/transaction/tx/{}">Block Explorer Link</a>""".format(amount, txid)
+    if new_data['transactions']['00']['block'] > old_data-['transactions']['00']['block']:
+        movement_int = int(float(new_data['transactions']['00']['amount']))
+        txid = new_data['transactions']['00']['txid']
+    else:
+        movement_int = 0
+
+    if movement_int > 0 or movement_int < 0:
+        content = """{} Tether moved from master address \n <a href="https://api.omniexplorer.info/v1/transaction/tx/{}">Block Explorer Link</a>""".format(movement_int, txid)
         # send_email(content)
         send_slack_message(amount, txid)
         # write_json(new_data, 'tether_data')
+        return True
+
     else:
         print("No movement detected, sleeping for now.")
         sys.exit(1)
-    print(response.status_code)
 
 
 if __name__ == "__main__":
+    poll_omni_explorer_address()
     check_for_movement()
