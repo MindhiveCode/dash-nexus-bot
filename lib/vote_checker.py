@@ -13,6 +13,7 @@ vote_cache = 'get_votes'
 
 # Set this to be the change delta you want to trigger your notifications
 delta_setting = int(os.getenv('DELTA_SETTING', 1))
+proposal_hash = os.getenv('PROPOSAL_HASH')
 
 
 def prepare_votes(vote_data):
@@ -135,7 +136,6 @@ def get_mn_count():
 
 
 def poll_dash_central():
-    proposal_hash = os.getenv('PROPOSAL_HASH')
     url = "https://www.dashcentral.org/api/v1/proposal?hash={}".format(proposal_hash)
 
     data = requests.get(url)
@@ -220,13 +220,17 @@ def gen_message_2(proposal_data):
 def check_for_updates():
     new_data = poll_dash_central()
 
-    # Check to make sure that we have cached data before continuing
-    if UsefulFunctions.check_cache('dc_data'):
-        old_data = UsefulFunctions.read_cache("dc_data")
-    else:
-        UsefulFunctions.write_cache(new_data, "dc_data")
-        old_data = UsefulFunctions.read_cache("dc_data")
+    hash_key = "dc_data" + str(proposal_hash)
 
+    # Check to make sure that we have cached data before continuing
+    if UsefulFunctions.check_cache(hash_key):  # If old data found, load it
+        old_data = UsefulFunctions.read_cache(hash_key)
+
+    else:  # If old data not found, save some and then continue
+        UsefulFunctions.write_cache(new_data, hash_key)
+        old_data = UsefulFunctions.read_cache(hash_key)
+
+    # Set deltas to zero
     yes_delta = 0
     no_delta = 0
     comment_delta = 0
@@ -247,7 +251,7 @@ def check_for_updates():
     new_data['deltas'] = deltas
 
     if yes_delta > delta_setting or no_delta > delta_setting:
-        UsefulFunctions.write_cache(new_data, "dc_data", ex_time=172800)  # Update our persistent storage
+        UsefulFunctions.write_cache(json.dumps(new_data), hash_key, ex_time=172800)  # Update our persistent storage
         webhook_message(gen_message_2(new_data))  # Send message via Webhook
         print("Ran once, fired off update. Delta Y:{} N:{}".format(yes_delta, no_delta))
     else:
