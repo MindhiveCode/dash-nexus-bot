@@ -1,9 +1,7 @@
 import time
-import sys
 import os
 import redis
 import json
-import requests
 
 
 class UsefulFunctions:
