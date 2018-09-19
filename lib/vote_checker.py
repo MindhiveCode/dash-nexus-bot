@@ -144,6 +144,9 @@ def poll_dash_central():
     min_quorum = int(get_mn_count())/10
     proposal_data['current_ratio'] = round((((proposal_data['yes']-proposal_data['no'])/min_quorum)*10), 2)
 
+    proposal_data.pop("description_base64_bb", None)
+    proposal_data.pop("description_base64_html", None)
+
     return proposal_data
 
 
@@ -220,15 +223,17 @@ def gen_message_2(proposal_data):
 def check_for_updates():
     new_data = poll_dash_central()
 
-    hash_key = "dc_data" + str(proposal_hash)
+    hash_key = "dc_data" + "_" + str(proposal_hash)
 
     # Check to make sure that we have cached data before continuing
     if UsefulFunctions.check_cache(hash_key):  # If old data found, load it
         old_data = UsefulFunctions.read_cache(hash_key)
+        print("Old data found, using that.")
 
     else:  # If old data not found, save some and then continue
         UsefulFunctions.write_cache(new_data, hash_key)
         old_data = UsefulFunctions.read_cache(hash_key)
+        print("No old data found, writing new data. No way we'll send and update")
 
     # Set deltas to zero
     yes_delta = 0
