@@ -23,7 +23,7 @@ class UsefulFunctions:
             return False
 
     @staticmethod
-    def write_cache(data, cache_key, ex_time=300):
+    def write_cache(data, cache_key, ex_time=None):
         """
         Write data with a key of cache_key to the redis cache
         param data: A python dictionary holding the data you want cached
@@ -33,7 +33,10 @@ class UsefulFunctions:
         """
         db = redis.from_url(os.environ.get("REDIS_URL"))
         try:
-            db.set(cache_key, json.dumps(data))
+            if ex_time is not None:
+                db.set(cache_key, json.dumps(data), ex=ex_time)
+            else:
+                db.set(cache_key, json.dumps(data))
             return True
         except Exception as e:
             print(e)
