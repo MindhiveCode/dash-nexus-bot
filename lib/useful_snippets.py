@@ -33,7 +33,7 @@ class UsefulFunctions:
         """
         db = redis.from_url(os.environ.get("REDIS_URL"))
         try:
-            db.set(cache_key, json.dumps(data), ex=ex_time)
+            db.set(cache_key, json.dumps(data))
             return True
         except Exception as e:
             print(e)
