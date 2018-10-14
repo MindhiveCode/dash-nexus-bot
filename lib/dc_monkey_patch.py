@@ -206,7 +206,7 @@ def combine(dc_data, valid_list):
 
     # Remove expired proposals from Dash Central data
     final_data = []
-    for proposal in dc_data['proposals']:
+    for count, proposal in enumerate(dc_data['proposals']):
         try:
             end_time = datetime.datetime.strptime(proposal['date_end'], format(time_string))
             end_timestamp = end_time.timestamp()
@@ -216,6 +216,8 @@ def combine(dc_data, valid_list):
                 continue
         except KeyError:
             print("Missing DashCentral proposal information, skipping...")
+            print("Removing this proposal because it will break front-end code.")
+            dc_data['proposals'].pop(count)
 
     # Generate new dictionary for of key/value pairs rather than list for valid proposal list
     kv_valid = dict()
@@ -224,26 +226,31 @@ def combine(dc_data, valid_list):
 
     # Check Superblock payments
     cur_blockheight = get_network_status()['info']['blocks']
-    for proposal in dc_data['proposals']:
-        print("Checking payments")
-        # start_epoch = datetime.datetime.strptime(proposal['date_added'], format=time_string).timestamp()
-        # end_epoch = datetime.datetime.strptime(proposal['date_end'], format=time_string).timestamp()
-        amount = kv_valid[proposal['hash']]['DataObject']['payment_amount']
-        address = kv_valid[proposal['hash']]['DataObject']['payment_address']
-        start_epoch = kv_valid[proposal['hash']]['DataObject']['start_epoch']
-        end_epoch = kv_valid[proposal['hash']]['DataObject']['end_epoch']
+    for count, proposal in enumerate(dc_data['proposals']):
+        try:
+            print("Checking payments")
+            # start_epoch = datetime.datetime.strptime(proposal['date_added'], format=time_string).timestamp()
+            # end_epoch = datetime.datetime.strptime(proposal['date_end'], format=time_string).timestamp()
+            amount = kv_valid[proposal['hash']]['DataObject']['payment_amount']
+            address = kv_valid[proposal['hash']]['DataObject']['payment_address']
+            start_epoch = kv_valid[proposal['hash']]['DataObject']['start_epoch']
+            end_epoch = kv_valid[proposal['hash']]['DataObject']['end_epoch']
 
-        # Add necessary fields
-        proposal.update({
-            "start_epoch": start_epoch,
-            "end_epoch": end_epoch,
-            "payment_address": address,
-            "payment_amount": amount
-        })
+            # Add necessary fields
+            proposal.update({
+                "start_epoch": start_epoch,
+                "end_epoch": end_epoch,
+                "payment_address": address,
+                "payment_amount": amount
+            })
 
-        # Calculate payments
+            # Calculate payments
+            proposal.update({"superblock_payments": gen_funding_array(proposal, cur_blockheight)})
 
-        proposal.update({"superblock_payments": gen_funding_array(proposal, cur_blockheight)})
+        except KeyError:
+            print("Missing DashCentral proposal information, skipping...")
+            print("Removing this proposal because it will break front-end code.")
+            dc_data['proposals'].pop(count)
 
     # Mark zombie proposals
     # If proposal has more than two payments total but hasn't received one in the past two superblocks, mark as zombie
@@ -255,7 +262,6 @@ def combine(dc_data, valid_list):
         else:
             zombie_status = False
             proposal.update({"isZombie": zombie_status})
-
 
     print("Fetched all missing data... Returning.")
 
