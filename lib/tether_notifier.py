@@ -5,7 +5,7 @@ from lib.useful_snippets import UsefulFunctions
 
 from sendgrid.helpers.mail import *
 
-sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+sg = sendgrid.SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 # sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
 
 
