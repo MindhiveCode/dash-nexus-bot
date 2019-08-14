@@ -3,6 +3,7 @@ import sys
 import json
 from decimal import *
 import os
+import functools
 
 from lib.useful_snippets import UsefulFunctions
 
@@ -41,14 +42,7 @@ def get_cb_tx_for_sb(blockheight):
     return sb_tx_data
 
 
-def calc_valid_sb(start_epoch, end_epoch):
-    file_name = "budget_periods.json"
-    cur_dir = os.path.dirname(os.path.abspath(__file__))
-    new_path = os.path.join(cur_dir, file_name)
-    print(new_path)
-    with open(new_path, 'r') as budget_period_json:
-        sb_data = json.load(budget_period_json)
-
+def calc_valid_sb(sb_data, start_epoch, end_epoch):
     b_height_array = list()
 
     for sb in sb_data:
@@ -81,6 +75,18 @@ def check_matching_payment(address, amount, blockheight):
     return False
 
 
+@functools.lru_cache(maxsize=10)
+def load_sb_data():
+    file_name = "budget_periods.json"
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    new_path = os.path.join(cur_dir, file_name)
+    print(new_path)
+    with open(new_path, 'r') as budget_period_json:
+        sb_data = json.load(budget_period_json)
+
+    return sb_data
+
+
 def gen_funding_array(proposal_data, cur_block):
     pay_hash_key = "payments_" + proposal_data['hash']
 
@@ -93,7 +99,7 @@ def gen_funding_array(proposal_data, cur_block):
         address = proposal_data['payment_address']
         amount = proposal_data['payment_amount']
 
-        valid_blockheights = calc_valid_sb(start_epoch, end_epoch)
+        valid_blockheights = calc_valid_sb(load_sb_data(), start_epoch, end_epoch)
         payment_dict = dict()
 
         for sb in valid_blockheights:
