@@ -66,36 +66,6 @@ def add_budget_periods():
         json.dump(new_bps, bp)
 
 
-def generate_budget_periods():
-    base_block_number = 631408
-    base_block_date = 1488744965
-    dash_blocks_between_superblocks = 16616  # approx 30.29 days
-
-    days_between_blocks = 30.29
-    seconds_in_day = 86400
-    seconds_between_blocks = days_between_blocks * seconds_in_day
-
-    first_block_epoch = 1441622431 # First verified superblock - expected time between them
-    fmt = "%y-%m-%d"
-    budget_periods = 0
-    cur_block_height = 332320  # Starts at the first superblock height
-    time_since_first_budget_period = 0
-    budget_period_dict_blocks = {}  # Initialize dict for block based budget periods
-    budget_period_dict_timestamps = {}  # Initialize dict for timestamp based budget periods
-
-    # The goal here is to create a dictionary of dates and block heights and then reference which one a given proposal
-    # comes between
-
-    while budget_periods <= 300:  # This will generate 5 years worth of proposals, starting with the first month
-        time_since_first_budget_period += seconds_between_blocks
-        cur_block_height += dash_blocks_between_superblocks
-        budget_period_dict_timestamps[first_block_epoch+time_since_first_budget_period] = "Period {}".format(budget_periods)
-        budget_periods += 1
-
-    return budget_period_dict_timestamps
-
-
-
 if __name__ == "__main__":
     add_budget_periods()
     # print(generate_budget_periods())
