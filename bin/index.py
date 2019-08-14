@@ -1,5 +1,5 @@
 from flask import Flask, request
-from lib.dc_monkey_patch import *
+from lib.dc_monkey_patch import get_api_data
 from flask import jsonify
 
 from pprint import pprint
@@ -18,7 +18,6 @@ def handle_budget():
 @app.route('/new_proposal', methods=['POST'])
 def handle_proposals():
     data = json.loads(request.data)
-
     print(data)
     pprint(data)
 
@@ -53,6 +52,10 @@ def handle_slack():
     pprint(data)
 
     return "OK"
+
+@app.route('/budget_historical', methods=['GET'])
+def handle_historical_budget():
+    pass
 
 
 if __name__ == '__main__':
