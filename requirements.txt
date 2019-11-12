@@ -2,7 +2,7 @@ requests
 flask
 tinys3
 boto
-discord
+discord==0.16.12 
 aiohttp
 pandas
 seaborn
